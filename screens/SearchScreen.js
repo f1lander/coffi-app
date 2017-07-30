@@ -19,7 +19,7 @@ import Stars from 'react-native-stars';
 
 export default class SearchScreen extends React.Component {
   static navigationOptions = {
-    title: "Search"
+    title: "Explora",
   };
 
   constructor(props){

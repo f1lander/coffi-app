@@ -3,6 +3,7 @@ import { Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
 
+
 import Colors from '../constants/Colors';
 
 import ProfileScreen from '../screens/ProfileScreen';
@@ -16,18 +17,20 @@ export default TabNavigator(
     News: {
       screen: NewsScreen,
     },
-    Profile: {
-      screen: ProfileScreen,
-    },
     Search: {
       screen: SearchScreen,
-    },
-    Friends: {
-      screen: FriendsScreen,
     },
     NewReview: {
       screen: NewReviewScreen,
     },
+
+    Friends: {
+      screen: FriendsScreen,
+    },
+    Profile: {
+      screen: ProfileScreen,
+    },
+
   },
   {
     navigationOptions: ({ navigation }) => ({
@@ -36,20 +39,21 @@ export default TabNavigator(
         let iconName;
         switch (routeName) {
           case 'News':
-            iconName = 'ios-restaurant-outline';
+            iconName = 'ios-bookmarks-outline';
             break;
           case 'Profile':
             iconName = 'ios-contact-outline';
             break;
+          case 'NewReview':
+            iconName = 'ios-qr-scanner-outline';
+            break;
           case 'Search':
-            iconName = 'ios-bookmarks-outline';
+            iconName = 'ios-globe-outline';
             break;
           case 'Friends':
-            iconName = 'ios-cart-outline';
+            iconName = 'ios-contacts-outline';
             break;
-          case 'NewReview':
-            iconName = 'ios-cart-outline';
-            break;
+
         }
         return (
           <Ionicons

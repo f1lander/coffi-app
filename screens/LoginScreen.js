@@ -81,10 +81,9 @@ class Login extends React.Component {
 				<View style={theme.view}>
 					<View style={theme.dayView}>
 						<Image style={theme.dayImage} source={require('../assets/images/bg.jpg')}>
-							<Image source={require('../assets/images/logo.png')} style={theme.dayImageIcon}/>
-							<AnnieText style={theme.dayWelcome}>Bienvenido!</AnnieText>
-							
-							<TouchableOpacity onPress={() => this.props.userStore.initIntro()} style={{height: 46, marginTop: 14}}>
+							<Image source={require('../assets/images/logo-c2.png')} style={theme.dayImageIcon}/>
+							<AnnieText style={theme.dayWelcome}>Bienvenido!</AnnieText>							
+							<TouchableOpacity onPress={() => this._handleFacebookLogin() } style={{height: 46, marginTop: 14}}>
 								<View style={theme.btnWrap}>
 									<Image source={require('../assets/images/facebook.png')} style={theme.btnImage}/>
 									<Text style={[theme.platoCoinText, {fontSize: 14}]}>INICIAR SESION</Text>
@@ -94,7 +93,6 @@ class Login extends React.Component {
 					</View>
 				</View>
 			);
-
 		if(this.props.userStore.status == 'first_time')
 			return (
 				<AppIntro onDoneBtnClick={() => this.props.userStore.doneIntro()} doneBtnLabel="Listo" skipBtnLabel="">

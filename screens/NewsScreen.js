@@ -47,7 +47,7 @@ export default class NewsScreen extends React.Component {
   }
 
   static navigationOptions = {
-    title: 'News'
+    title: "Recents Tasting",
   };
 
   _renderStar = (rating) => {
