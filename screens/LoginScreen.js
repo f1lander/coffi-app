@@ -22,6 +22,16 @@ export default class LoginScreen extends React.Component {
 		header: null
 	};
 
+	render() {
+		return (
+			<Login />
+		);
+	}
+}
+
+@inject("userStore")
+@observer
+class Login extends React.Component {
 	_handleFacebookLogin = async () => {
 		try {
 			const { type, token, expires } = await Facebook.logInWithReadPermissionsAsync(
@@ -62,16 +72,6 @@ export default class LoginScreen extends React.Component {
 		}
 	};
 
-	render() {
-		return (
-			<Login />
-		);
-	}
-}
-
-@inject("userStore")
-@observer
-class Login extends React.Component {
 	render() {
 		if(this.props.userStore.status == 'logged_in')
 			return  <RootNavigation />;
