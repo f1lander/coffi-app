@@ -4,18 +4,100 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
+import Stars from 'react-native-stars';
+
 import { MonoText } from '../components/StyledText';
 
+import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
+
 export default class NewsScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      reviews: [
+        {
+          id: 1,
+          username: "filander",
+          comment: "Muy Buen cafe",
+          location: "San Pedro Sula",
+          coffeName: "Cafe 504",
+          rate: 4.5,
+          avatarUrl: "https://placeimg.com/100/100/nature",
+          imageUrl: "https://placeimg.com/640/480/nature",
+          timeAgo: "11h ago"
+        },
+        {
+          id: 2,
+          username: "filander",
+          comment: "No muy bueno",
+          location: "San Pedro Sula",
+          coffeName: "Cafe ORO",
+          rate: 1.5,
+          avatarUrl: "https://placeimg.com/100/100/nature",
+          imageUrl: "https://placeimg.com/640/480/nature",
+          timeAgo: "11h ago"
+        }
+      ]
+    }
+  }
+
   static navigationOptions = {
     title: "Recents Tasting",
   };
+
+  _renderStar = (rating) => {
+    return (
+      <Stars half={true}
+        rating={rating}
+        spacing={4}
+        starSize={10}
+        backingColor='#fafafa'
+        count={5}
+        fullStar={require('../node_modules/react-native-stars/example-images/starFilled.png')}
+        emptyStar={require('../node_modules/react-native-stars/example-images/starEmpty.png')}
+        halfStar={require('../node_modules/react-native-stars/example-images/starHalf.png')} />
+    )
+  }
+
+  _renderCard(data){
+    return (
+      <Card>
+        <CardItem>
+          <Left>
+            <Thumbnail source={{ uri: data.avatarUrl }} />
+            <Body>
+              <Text>{ data.username }</Text>
+              <Text note>{ data.location }</Text>
+            </Body>
+          </Left>
+        </CardItem>
+        <CardItem>
+          <View style={{ flex: 1 }}>
+            <Text>{ data.comment }</Text>
+          </View>
+        </CardItem>
+        <CardItem cardBody>
+          <Image source={{ uri: data.imageUrl }} style={{ height: 200, width: null, flex: 1 }} />
+        </CardItem>
+        <CardItem>
+          <Left>
+            {this._renderStar(data.rate)}
+          </Left>
+          <Body>
+            <Text>{ data.coffeName }</Text>
+          </Body>
+          <Right>
+            <Text>{ data.timeAgo }</Text>
+          </Right>
+        </CardItem>
+      </Card>
+    )
+  }
 
   render() {
     return (
@@ -23,46 +105,13 @@ export default class NewsScreen extends React.Component {
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-            <Image
-              source={
-                __DEV__
-                  ? require('../assets/images/robot-dev.png')
-                  : require('../assets/images/robot-prod.png')
-              }
-              style={styles.welcomeImage}
-            />
-          </View>
-
-          <View style={styles.getStartedContainer}>
-            {this._maybeRenderDevelopmentModeWarning()}
-
-            <Text style={styles.getStartedText}>Get started by opening</Text>
-
-            <View
-              style={[
-                styles.codeHighlightContainer,
-                styles.homeScreenFilename,
-              ]}>
-              <MonoText style={styles.codeHighlightText}>
-                screens/HomeScreen.js
-              </MonoText>
-            </View>
-
-            <Text style={styles.getStartedText}>
-              Change this text and your app will automatically reload.
-            </Text>
-          </View>
-
-          <View style={styles.helpContainer}>
-            <TouchableOpacity
-              onPress={this._handleHelpPress}
-              style={styles.helpLink}>
-              <Text style={styles.helpLinkText}>
-                Help, it didn’t automatically reload!
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <Content>
+            {
+              this.state.reviews.map(x => {
+                return this._renderCard(x);
+              })
+            }
+          </Content>
         </ScrollView>
 
         <View style={styles.tabBarInfoContainer}>
@@ -103,18 +152,6 @@ export default class NewsScreen extends React.Component {
       );
     }
   }
-
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/development-mode'
-    );
-  };
-
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    );
-  };
 }
 
 const styles = StyleSheet.create({
