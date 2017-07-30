@@ -4,18 +4,35 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
+import Stars from 'react-native-stars';
+
 import { MonoText } from '../components/StyledText';
+
+import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
 
 export default class NewsScreen extends React.Component {
   static navigationOptions = {
-    header: null,
+    title: 'News'
   };
+
+  _renderStar = (rating) => {
+    return (
+      <Stars half={true}
+        rating={rating}
+        spacing={4}
+        starSize={10}
+        backingColor='#fafafa'
+        count={5}
+        fullStar={require('../node_modules/react-native-stars/example-images/starFilled.png')}
+        emptyStar={require('../node_modules/react-native-stars/example-images/starEmpty.png')}
+        halfStar={require('../node_modules/react-native-stars/example-images/starHalf.png')} />
+    )
+  }
 
   render() {
     return (
@@ -23,46 +40,38 @@ export default class NewsScreen extends React.Component {
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-            <Image
-              source={
-                __DEV__
-                  ? require('../assets/images/robot-dev.png')
-                  : require('../assets/images/robot-prod.png')
-              }
-              style={styles.welcomeImage}
-            />
-          </View>
-
-          <View style={styles.getStartedContainer}>
-            {this._maybeRenderDevelopmentModeWarning()}
-
-            <Text style={styles.getStartedText}>Get started by opening</Text>
-
-            <View
-              style={[
-                styles.codeHighlightContainer,
-                styles.homeScreenFilename,
-              ]}>
-              <MonoText style={styles.codeHighlightText}>
-                screens/HomeScreen.js
-              </MonoText>
-            </View>
-
-            <Text style={styles.getStartedText}>
-              Change this text and your app will automatically reload.
-            </Text>
-          </View>
-
-          <View style={styles.helpContainer}>
-            <TouchableOpacity
-              onPress={this._handleHelpPress}
-              style={styles.helpLink}>
-              <Text style={styles.helpLinkText}>
-                Help, it didn’t automatically reload!
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <Content>
+            <Card>
+              <CardItem>
+                <Left>
+                  <Thumbnail source={{ uri: 'https://placeimg.com/640/480/nature' }} />
+                  <Body>
+                    <Text>NativeBase</Text>
+                    <Text note>GeekyAnts</Text>
+                  </Body>
+                </Left>
+              </CardItem>
+              <CardItem>
+                <View style={{flex: 1}}>
+                  <Text>Muy buen cafe!</Text>
+                </View>
+              </CardItem>
+              <CardItem cardBody>
+                <Image source={{ uri: 'https://placeimg.com/640/480/nature' }} style={{ height: 200, width: null, flex: 1 }} />
+              </CardItem>
+              <CardItem>
+                <Left>
+                  { this._renderStar(4.5) }
+                </Left>
+                <Body>
+                  <Text>Cafe 504</Text>
+                </Body>
+                <Right>
+                  <Text>11h ago</Text>
+                </Right>
+              </CardItem>
+            </Card>
+          </Content>
         </ScrollView>
 
         <View style={styles.tabBarInfoContainer}>
@@ -103,18 +112,6 @@ export default class NewsScreen extends React.Component {
       );
     }
   }
-
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/development-mode'
-    );
-  };
-
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    );
-  };
 }
 
 const styles = StyleSheet.create({
