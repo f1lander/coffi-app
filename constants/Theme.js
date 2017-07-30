@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	'fullColorView':{
-		backgroundColor: "#DA0021",
+		backgroundColor: "#FF9318",
 		flex:1,
 		width: width,
 		alignItems: 'center',
