@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@expo/samples": "^2.0.2",
+    "apisauce": "^0.14.0",
     "expo": "19.0.0",
     "react": "16.0.0-alpha.12",
     "react-native": "https://github.com/expo/react-native/archive/sdk-19.0.0.tar.gz",
