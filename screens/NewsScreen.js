@@ -16,6 +16,36 @@ import { MonoText } from '../components/StyledText';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
 
 export default class NewsScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      reviews: [
+        {
+          id: 1,
+          username: "filander",
+          comment: "Muy Buen cafe",
+          location: "San Pedro Sula",
+          coffeName: "Cafe 504",
+          rate: 4.5,
+          avatarUrl: "https://placeimg.com/100/100/nature",
+          imageUrl: "https://placeimg.com/640/480/nature",
+          timeAgo: "11h ago"
+        },
+        {
+          id: 2,
+          username: "filander",
+          comment: "No muy bueno",
+          location: "San Pedro Sula",
+          coffeName: "Cafe ORO",
+          rate: 1.5,
+          avatarUrl: "https://placeimg.com/100/100/nature",
+          imageUrl: "https://placeimg.com/640/480/nature",
+          timeAgo: "11h ago"
+        }
+      ]
+    }
+  }
+
   static navigationOptions = {
     title: 'News'
   };
@@ -34,6 +64,41 @@ export default class NewsScreen extends React.Component {
     )
   }
 
+  _renderCard(data){
+    return (
+      <Card>
+        <CardItem>
+          <Left>
+            <Thumbnail source={{ uri: data.avatarUrl }} />
+            <Body>
+              <Text>{ data.username }</Text>
+              <Text note>{ data.location }</Text>
+            </Body>
+          </Left>
+        </CardItem>
+        <CardItem>
+          <View style={{ flex: 1 }}>
+            <Text>{ data.comment }</Text>
+          </View>
+        </CardItem>
+        <CardItem cardBody>
+          <Image source={{ uri: data.imageUrl }} style={{ height: 200, width: null, flex: 1 }} />
+        </CardItem>
+        <CardItem>
+          <Left>
+            {this._renderStar(data.rate)}
+          </Left>
+          <Body>
+            <Text>{ data.coffeName }</Text>
+          </Body>
+          <Right>
+            <Text>{ data.timeAgo }</Text>
+          </Right>
+        </CardItem>
+      </Card>
+    )
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -41,36 +106,11 @@ export default class NewsScreen extends React.Component {
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
           <Content>
-            <Card>
-              <CardItem>
-                <Left>
-                  <Thumbnail source={{ uri: 'https://placeimg.com/640/480/nature' }} />
-                  <Body>
-                    <Text>NativeBase</Text>
-                    <Text note>GeekyAnts</Text>
-                  </Body>
-                </Left>
-              </CardItem>
-              <CardItem>
-                <View style={{flex: 1}}>
-                  <Text>Muy buen cafe!</Text>
-                </View>
-              </CardItem>
-              <CardItem cardBody>
-                <Image source={{ uri: 'https://placeimg.com/640/480/nature' }} style={{ height: 200, width: null, flex: 1 }} />
-              </CardItem>
-              <CardItem>
-                <Left>
-                  { this._renderStar(4.5) }
-                </Left>
-                <Body>
-                  <Text>Cafe 504</Text>
-                </Body>
-                <Right>
-                  <Text>11h ago</Text>
-                </Right>
-              </CardItem>
-            </Card>
+            {
+              this.state.reviews.map(x => {
+                return this._renderCard(x);
+              })
+            }
           </Content>
         </ScrollView>
 
