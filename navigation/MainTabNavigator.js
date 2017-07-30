@@ -5,20 +5,28 @@ import { TabNavigator, TabBarBottom } from 'react-navigation';
 
 import Colors from '../constants/Colors';
 
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import SearchScreen from '../screens/SearchScreen';
+import FriendsScreen from '../screens/FriendsScreen';
+import NewsScreen from '../screens/NewsScreen';
+import NewReviewScreen from '../screens/NewReviewScreen';
 
 export default TabNavigator(
   {
-    Home: {
-      screen: HomeScreen,
+    News: {
+      screen: NewsScreen,
     },
-    Links: {
-      screen: LinksScreen,
+    Profile: {
+      screen: ProfileScreen,
     },
-    Settings: {
-      screen: SettingsScreen,
+    Search: {
+      screen: SearchScreen,
+    },
+    Friends: {
+      screen: FriendsScreen,
+    },
+    NewReview: {
+      screen: NewReviewScreen,
     },
   },
   {
@@ -27,25 +35,26 @@ export default TabNavigator(
         const { routeName } = navigation.state;
         let iconName;
         switch (routeName) {
-          case 'Home':
-            iconName = Platform.OS === 'ios'
-              ? `ios-information-circle${focused ? '' : '-outline'}`
-              : 'md-information-circle';
+          case 'News':
+            iconName = 'ios-restaurant-outline';
             break;
-          case 'Links':
-            iconName = Platform.OS === 'ios'
-              ? `ios-link${focused ? '' : '-outline'}`
-              : 'md-link';
+          case 'Profile':
+            iconName = 'ios-contact-outline';
             break;
-          case 'Settings':
-            iconName = Platform.OS === 'ios'
-              ? `ios-options${focused ? '' : '-outline'}`
-              : 'md-options';
+          case 'Search':
+            iconName = 'ios-bookmarks-outline';
+            break;
+          case 'Friends':
+            iconName = 'ios-cart-outline';
+            break;
+          case 'NewReview':
+            iconName = 'ios-cart-outline';
+            break;
         }
         return (
           <Ionicons
             name={iconName}
-            size={28}
+            size={32}
             style={{ marginBottom: -3 }}
             color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
           />
@@ -54,7 +63,14 @@ export default TabNavigator(
     }),
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
-    animationEnabled: false,
-    swipeEnabled: false,
+    animationEnabled: true,
+    swipeEnabled: true,
+    tabBarOptions: {
+      showLabel: false,
+      style: {
+        borderTopColor: 'rgba(0,0,0,0.1)',
+        backgroundColor: Colors.tintColor
+      }
+    }
   }
 );
