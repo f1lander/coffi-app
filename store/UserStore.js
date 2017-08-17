@@ -6,13 +6,13 @@ export default class UserStore {
 	@observable status = 'logged_out';
 
 	@observable userid = 1;
-	@observable name = "Ivan Suazo";
-	@observable email = "joshepw@gmail.com";
+	@observable name = "Edax Ucles";
+	@observable email = "filanderuclez@gmail.com";
 	@observable phone = "+(504) 9999-9999";
 	@observable place = 0;
 
 	@observable avatar = "";
-	@observable credit = 0;
+	@observable credit = 150;
 
 	constructor(){
 		AsyncStorage.multiGet([

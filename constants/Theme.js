@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 		padding: 10
 	},
 	text: {
-		fontFamily: 'annie',
+		fontFamily: 'ticketing',
 		color: '#fff',
 		fontSize: 26,
 		backgroundColor: 'transparent',
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
 	},
 	subtext: {
 		color: '#fff',
-		fontFamily: 'annie',
+		fontFamily: 'space-mono',
 		fontSize: 16,
 		textAlign: 'center',
 	},
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: '#FF9318',
+		backgroundColor: '#FFBA08',
 		padding: 20,
 	},
 	welcomeImage: {
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
 		borderRadius: ((width/3.4))/2
 	},
 	'platoTitle' : {
-		color: '#fff',
+		color: '#78441D',
 		backgroundColor: 'transparent',
 		fontFamily: 'annie',
 		fontSize: 16,

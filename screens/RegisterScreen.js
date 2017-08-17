@@ -17,14 +17,14 @@ import theme from '../constants/Theme';
 import RootNavigation from '../navigation/RootNavigation';
 
 @inject("userStore")
-export default class LoginScreen extends React.Component {
+export default class RegisterScreen extends React.Component {
 	static navigationOptions = {
 		header: null
 	};
 
-	_handleFacebookLogin = async () => {
+	_handleFacebookRegister = async () => {
 		try {
-			const { type, token, expires } = await Facebook.logInWithReadPermissionsAsync(
+			const { type, token, expires } = await Facebook.RegisterWithReadPermissionsAsync(
 				'1573625069363621', { permissions: ['public_profile','email'] }
 			);
 
@@ -43,35 +43,35 @@ export default class LoginScreen extends React.Component {
 				case 'cancel': {
 					Alert.alert(
 						'Cancelled!',
-						'Login was cancelled!',
+						'Register was cancelled!',
 					);
 					break;
 				}
 				default: {
 					Alert.alert(
 						'Oops!',
-						'Login failed!',
+						'Register failed!',
 					);
 				}
 			}
 		} catch (e) {
 			Alert.alert(
 				'Oops!',
-				'Login failed!',
+				'Register failed!',
 			);
 		}
 	};
 
 	render() {
 		return (
-			<Login />
+			<Register />
 		);
 	}
 }
 
 @inject("userStore")
 @observer
-class Login extends React.Component {
+class Register extends React.Component {
 	render() {
 		if(this.props.userStore.status == 'logged_in')
 			return  <RootNavigation />;
@@ -89,34 +89,9 @@ class Login extends React.Component {
 									<Text style={[theme.platoCoinText, {fontSize: 14}]}>INICIAR SESION</Text>
 								</View>
 							</TouchableOpacity>
-							<TouchableOpacity onPress={() => this.props.userStore.initIntro()} style={{height: 46, marginTop: 14}}>
-								<View style={theme.btnWrap}>								
-									<Text style={[theme.platoCoinText, {fontSize: 14}]}>INICIAR SESION</Text>
-								</View>
-							</TouchableOpacity>
 						</Image>
 					</View>
 				</View>
-			);
-		if(this.props.userStore.status == 'first_time')
-			return (
-				<AppIntro onDoneBtnClick={() => this.props.userStore.doneIntro()} doneBtnLabel="Listo" skipBtnLabel="">
-					<View style={[theme.welcomeSlide]}>
-						<Image level={-10} source={require('../assets/images/benbenuto.png')} style={theme.welcomeImage}/>
-						<View level={5}><Text style={theme.text}>¡Bienvenido!</Text></View>
-						<View level={20}><Text style={theme.subtext}>Coffii</Text></View>
-					</View>
-					<View style={[theme.welcomeSlide]}>
-						<Image level={-10} source={require('../assets/images/good-review.png')} style={theme.welcomeImage}/>
-						<View level={5}><Text style={theme.text}>Reviews</Text></View>
-						<View level={20}><Text style={theme.subtext}>¿Como elegir un buen cafe? De eso no te preocupes, todos los días la comunidad está haciendo reviews</Text></View>
-					</View>
-					<View style={[theme.welcomeSlide]}>
-						<Image level={-10} source={require('../assets/images/coffee.png')} style={theme.welcomeImage}/>
-						<View level={5}><Text style={theme.text}>Busca, Compra y Disfruta</Text></View>
-						<View level={20}><Text style={theme.subtext}>No te preocupes, encuentra los cafes mas votados por la comunidad.</Text></View>
-					</View>
-				</AppIntro>
 			);
 	}
 }

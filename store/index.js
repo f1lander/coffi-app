@@ -1,7 +1,7 @@
 import UserStore from "./UserStore";
-import PlatoStore from "./PlatoStore";
+import CoffeeStore from "./CoffeeStore";
 
 export default {
   userStore: new UserStore(),
-  platoStore: new PlatoStore()
+  platoStore: new CoffeeStore()
 };
