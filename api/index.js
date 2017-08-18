@@ -1,6 +1,6 @@
 
 
-const BASE_URL = 'http://localhost:3000/api/v1';
+const BASE_URL = 'https://cofi-api.herokuapp.com/api';
 
 // a library to wrap and simplify api calls
 import apisauce from 'apisauce'

@@ -24,14 +24,14 @@ const RootStackNavigator = StackNavigator(
 			headerTitleStyle: {
 				fontWeight: 'normal',
 				backgroundColor: Colors.tintColor,
-				fontFamily: 'annie',
-				color: '#fff'
+				fontFamily: 'space-mono',
+				color: '#78441D'
 			},
 			headerBackTitleStyle: {
 				fontWeight: 'normal',
 				backgroundColor: Colors.tintColor,
-				fontFamily: 'annie',
-				color: '#fff',
+				fontFamily: 'space-mono',
+				color: '#78441D',
 				paddingRight: 15,
 				paddingLeft: 15,
 			},

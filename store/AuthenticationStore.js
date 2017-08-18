@@ -19,11 +19,15 @@ export default class AuthenticationStore {
 	}
 
 	@computed get status () {
-		return this.isAuthenticated() ? (this.firstTime ? 'first_time' : 'logged_in'): 'logged_out'
+		return this.token ? (this.firstTime ? 'first_time' : 'logged_in'): 'logged_out'
+	}
+
+	@action initIntro() {
+		this.firstTime = true;
 	}
 
 	@action doneIntro() {
-		this.firstTime = false
+		this.firstTime = false;
 	}
   
 	@action login () {
@@ -36,7 +40,6 @@ export default class AuthenticationStore {
   
 	  this.token = token
 	  this.isAuthenticating = false
-	  this.firstTime = true
 
 	  AsyncStorage.setItem('token', token)
 	}
@@ -48,4 +51,4 @@ export default class AuthenticationStore {
 	  this.token = null
 	  AsyncStorage.removeItem('token')
 	}
-  }
+}

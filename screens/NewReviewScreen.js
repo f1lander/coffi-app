@@ -1,11 +1,17 @@
 import React from 'react';
 import { Button, Image, View } from 'react-native';
 import { ImagePicker } from 'expo';
+import { api } from "../api";
 
 export default class ImagePickerExample extends React.Component {
   state = {
     image: null,
   };
+
+  static navigationOptions = {
+    title: 'Add Review',
+  };
+
 
   render() {
     let { image } = this.state;
@@ -17,7 +23,8 @@ export default class ImagePickerExample extends React.Component {
           onPress={this._pickImage}
         />
         {image &&
-          <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+          <Image source={{ uri: image }} style={{ top: 10, width: 200, height: 200 }} />}
+
       </View>
     );
   }
@@ -34,5 +41,23 @@ export default class ImagePickerExample extends React.Component {
     if (!result.cancelled) {
       this.setState({ image: result.uri });
     }
+
+    if (result.base64) {
+      fetch('https://cofi-api.herokuapp.com/api/coffees/search/', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          image: result.base64,
+        
+        })
+      }).then(response => response.json())
+      .then(responseJson => window.alert(JSON.stringify(responseJson)))
+      .catch(error => window.alert("Error"));
+      
+    }
+
   };
 }

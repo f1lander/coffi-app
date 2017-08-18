@@ -72,13 +72,8 @@ export default class MiCuentaScreen extends React.Component {
 					<Image style={theme.avatarImage} source={this.props.userStore.avatar ? {uri: this.props.userStore.avatar} : require('../assets/images/avatar.png')} />
 					<View style={{justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center', flex: 1}}>
 						<Image source={require('../assets/images/coin.png')} style={{ width: 40, height: 40 }}/>
-						<Text style={theme.platoCoinText}> L.{this.props.userStore.credit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+						<Text style={theme.platoCoinText}> {this.props.userStore.credit} Tasted Coffee</Text>
 					</View>
-					<TouchableOpacity>
-						<View style={{ backgroundColor:'#FFCE60', marginLeft: 10, marginRight: 10, padding: 8, paddingLeft: 14, paddingRight: 14, borderRadius: 18 }}>
-							<Text style={{ color: '#F77B5A', fontWeight: 'bold', borderRadius: 18 }}>COMPRAR</Text>
-						</View>
-					</TouchableOpacity>
 				</View>
 				<View>
 					<Form>
@@ -94,33 +89,10 @@ export default class MiCuentaScreen extends React.Component {
 							<Image source={require('../assets/images/color/phone.png')} style={theme.formImage}/>
 							<Input placeholder="Telefono" defaultValue={this.state.user.phone}/>
 						</Item>
-						<Item>
-							<Image source={require('../assets/images/color/place.png')} style={theme.formImage}/>
-							<Picker
-								iosHeader="Lugar de entrega"
-								selectedValue={this.state.user.place}
-								onValueChange={(value) => this.setState({ user : { ...this.state.user, place: value } })}
-								mode="dropdown" 
-								style={{paddingLeft: 5}}>
-								{this.state.places.map((item, key)=>{
-									return(
-										<Picker.Item label={item.nombre} value={item.id} key={key}/>
-									);
-								})}
-							</Picker>
-						</Item>
 
-						<View style={{margin:10, marginTop: 20}}>
-							<TouchableOpacity>
-								<View style={theme.btnWrap}>
-									<Image source={require('../assets/images/save.png')} style={theme.btnImage}/>
-									<Text style={theme.btnText}>GUARDAR</Text>
-								</View>
-							</TouchableOpacity>
-
+						<View style={{margin:10, marginTop: 20}}>							
 							<LogOut />
 						</View>
-
 					</Form>
 				</View>
 			</ScrollView>
