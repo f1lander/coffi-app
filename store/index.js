@@ -1,7 +1,5 @@
-import UserStore from "./UserStore";
-import PlatoStore from "./PlatoStore";
+import AuthenticationStore from "./AuthenticationStore";
 
 export default {
-  userStore: new UserStore(),
-  platoStore: new PlatoStore()
+  authenticationStore: new AuthenticationStore(),
 };
