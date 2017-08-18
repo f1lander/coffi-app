@@ -10,6 +10,10 @@ import { WebBrowser, Constants, Facebook } from 'expo';
 import { observer, inject } from "mobx-react";
 import { Toast } from "native-base";
 
+import {
+	StackNavigator,
+  } from 'react-navigation';
+
 
 import AppIntro from 'react-native-app-intro';
 import theme from '../constants/Theme';
@@ -21,7 +25,7 @@ export default class LoginScreen extends React.Component {
 	static navigationOptions = {
 		header: null
 	};
-
+	
 	_handleFacebookLogin = async () => {
 		try {
 			const { type, token, expires } = await Facebook.logInWithReadPermissionsAsync(
@@ -73,6 +77,7 @@ export default class LoginScreen extends React.Component {
 @observer
 class Login extends React.Component {
 	render() {
+
 		if(this.props.userStore.status == 'logged_in')
 			return  <RootNavigation />;
 
@@ -89,9 +94,9 @@ class Login extends React.Component {
 									<Text style={[theme.platoCoinText, {fontSize: 14}]}>INICIAR SESION</Text>
 								</View>
 							</TouchableOpacity>
-							<TouchableOpacity onPress={() => this.props.userStore.initIntro()} style={{height: 46, marginTop: 14}}>
+							<TouchableOpacity onPress={() => this._handlePress } style={{height: 46, marginTop: 14}}>
 								<View style={theme.btnWrap}>								
-									<Text style={[theme.platoCoinText, {fontSize: 14}]}>INICIAR SESION</Text>
+									<Text style={[theme.platoCoinText, {fontSize: 14}]}>Registrarse</Text>
 								</View>
 							</TouchableOpacity>
 						</Image>
@@ -119,5 +124,11 @@ class Login extends React.Component {
 				</AppIntro>
 			);
 	}
-}
 
+	_handlePress = () => {
+		this.props.navigation.navigate('RegisterScreen');
+		
+	  }
+	
+	
+}

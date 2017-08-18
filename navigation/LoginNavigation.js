@@ -3,44 +3,26 @@ import { Notifications } from 'expo';
 import { StackNavigator } from 'react-navigation';
 
 import Colors from '../constants/Colors';
-
+import { LoginScreen, RegisterScreen } from '../screens'
 import MainTabNavigator from './MainTabNavigator';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
-const RootStackNavigator = StackNavigator(
+const LoginStackNavigator = StackNavigator(
 	{
-		Main: {
-			screen: MainTabNavigator,
-			path: '/tabs'
-		}
-		
-	},
-	{
-		navigationOptions: () => ({
-			headerStyle: {
-				backgroundColor: Colors.tintColor,
-				borderBottomColor: 'rgba(0,0,0,0.1)'
-			},
-			headerTitleStyle: {
-				fontWeight: 'normal',
-				backgroundColor: Colors.tintColor,
-				fontFamily: 'space-mono',
-				color: '#78441D'
-			},
-			headerBackTitleStyle: {
-				fontWeight: 'normal',
-				backgroundColor: Colors.tintColor,
-				fontFamily: 'space-mono',
-				color: '#78441D',
-				paddingRight: 15,
-				paddingLeft: 15,
-			},
-			headerTintColor: '#fff'
-		}),
+		Login: {
+			screen: LoginScreen,
+			path: '/login'
+        },
+        
+        Register:{
+            screen: RegisterScreen,
+            path:'/register'
+        }        		
 	}
+
 );
 
-export default class RootNavigator extends React.Component {
+export default class LoginNavigator extends React.Component {
 	componentDidMount() {
 		this._notificationSubscription = this._registerForPushNotifications();
 	}
@@ -50,7 +32,7 @@ export default class RootNavigator extends React.Component {
 	}
 
 	render() {
-		return <RootStackNavigator />;
+		return <LoginStackNavigator />;
 	}
 
 	_registerForPushNotifications() {
