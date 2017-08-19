@@ -39,10 +39,10 @@ const create = (baseURL = BASE_URL) => {
   }*/
 
   api.addAsyncRequestTransform(request => async () => {
-	const accessToken = await AsyncStorage.getItem('token')
-	if(accessToken){
-		request.headers['Authorization'] = accessToken;
-	}
+    const accessToken = await AsyncStorage.getItem('token')
+    if(accessToken){
+      request.headers['Authorization'] = accessToken;
+    }
   })
 
   api.addMonitor((response) => {
