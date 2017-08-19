@@ -9,14 +9,13 @@ import LogOut from '../components/LogOut';
 import theme from '../constants/Theme';
 import api from '../api';
 
-@inject("userStore")
 export default class MiCuentaScreen extends React.Component {
 	constructor(props){
 		super(props);
 
 		this.state = {
 			places: [],
-			user: this.props.userStore
+			user: {}
 		};
 	}
 
@@ -26,53 +25,53 @@ export default class MiCuentaScreen extends React.Component {
 	};
 
 	componentWillMount(){
-		api.get('/places').then((response)=>{
-			if(response.problem)
-				Toast.show({
-					text: 'Error en la conexión ('+ response.problem +')',
-					position: 'bottom',
-					type: 'warning',
-					duration: 5000
-				});
-			else
-				this.setState({ places: response.data });
-		});
+		// api.get('/places').then((response)=>{
+		// 	if(response.problem)
+		// 		Toast.show({
+		// 			text: 'Error en la conexión ('+ response.problem +')',
+		// 			position: 'bottom',
+		// 			type: 'warning',
+		// 			duration: 5000
+		// 		});
+		// 	else
+		// 		this.setState({ places: response.data });
+		// });
 	}
 
 	handleValueChange(isValid, values, validationResults, postSubmit = null, modalNavigator = null){
-		if(isValid === true){
-			api.get('/profile/'+this.props.userStore.userid, values).then((response)=>{
-				if(response.problem){
-					Toast.show({
-						text: 'Error en la conexión ('+ response.problem +')',
-						position: 'bottom',
-						type: 'warning',
-						duration: 5000
-					});
+		// if(isValid === true){
+		// 	api.get('/profile/'+this.state.userStore.userid, values).then((response)=>{
+		// 		if(response.problem){
+		// 			Toast.show({
+		// 				text: 'Error en la conexión ('+ response.problem +')',
+		// 				position: 'bottom',
+		// 				type: 'warning',
+		// 				duration: 5000
+		// 			});
 
-					postSubmit();
-				}else{
-					Toast.show({
-						text: 'Se guardo el perfil con exito!',
-						position: 'bottom',
-						type: 'success',
-						duration: 5000
-					});
+		// 			postSubmit();
+		// 		}else{
+		// 			Toast.show({
+		// 				text: 'Se guardo el perfil con exito!',
+		// 				position: 'bottom',
+		// 				type: 'success',
+		// 				duration: 5000
+		// 			});
 
-					postSubmit();
-				}
-			});
-		}
+		// 			postSubmit();
+		// 		}
+		// 	});
+		// }
 	}
 
 	render() {
 		return (
 			<ScrollView style={styles.container}>
 				<View style={{justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center'}}>
-					<Image style={theme.avatarImage} source={this.props.userStore.avatar ? {uri: this.props.userStore.avatar} : require('../assets/images/avatar.png')} />
+					<Image style={theme.avatarImage} source={this.state.user.avatar ? {uri: this.state.user.avatar} : require('../assets/images/avatar.png')} />
 					<View style={{justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center', flex: 1}}>
 						<Image source={require('../assets/images/coin.png')} style={{ width: 40, height: 40 }}/>
-						<Text style={theme.platoCoinText}> {this.props.userStore.credit} Tasted Coffee</Text>
+						<Text style={theme.platoCoinText}> {this.state.user.credit} Tasted Coffee</Text>
 					</View>
 				</View>
 				<View>
