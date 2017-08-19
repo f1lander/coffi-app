@@ -21,15 +21,7 @@ const LoginStackNavigator = StackNavigator(
 );
 
 export default class LoginNavigation extends React.Component {
-	componentWillMount(){
-		console.log('mounting')
-	}
-
-	componentDidMount(){
-		console.log('mounted')
-	}
-
 	render() {
-		return <LoginStackNavigator/>;
+		return <LoginStackNavigator {...this.props}/>;
 	}
 }

@@ -2,6 +2,7 @@
 
 const BASE_URL = 'https://cofi-api.herokuapp.com/api';
 
+const AUTH_FACEBOOK_CALLBACK_URL = 'https://cofi-api.herokuapp.com/facebook/callback';
 // a library to wrap and simplify api calls
 import apisauce from 'apisauce'
 
@@ -78,6 +79,8 @@ const create = (baseURL = BASE_URL) => {
   const updateProfile = (data) => api.patch('/users/me', data)
 
   const resetPassword = (data) => api.post('/users/reset', data)
+
+  const loginWithFacebook = (accessToken) => api.get(`${AUTH_FACEBOOK_CALLBACK_URL}?access_token=${accessToken}`)
   
   // ------
   // STEP 3

@@ -7,20 +7,23 @@ import LoginNavigation from './LoginNavigation';
 
 import { Text } from 'react-native'
 
+import Api from '../api';
+
 @inject("authenticationStore")
 @observer
 export default class AppRoot extends React.Component {
-	componentDidMount(){
-		console.log('hello');
+    constructor(props){
+        super(props);
+        this.Api = new Api();
     }
-    
+
     render() {
 
         if (this.props.authenticationStore.status == 'logged_in') {
-            return <RootNavigation />;
+            return <RootNavigation Api={this.Api}/>;
         }
 
-        return <LoginNavigation />
+        return <LoginNavigation Api={this.Api}/>
 
     }
 
