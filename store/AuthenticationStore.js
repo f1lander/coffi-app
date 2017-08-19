@@ -9,6 +9,14 @@ export default class AuthenticationStore {
 		this.isAuthenticating = false
 	  }))  
 	}
+
+	_save(){
+	  return AsyncStorage.setItem('token', this.token);
+	}
+
+	_clear(){
+		return AsyncStorage.removeItem('token');
+	}
 	
 	@observable isAuthenticating = false
 	@observable token = null
@@ -29,7 +37,7 @@ export default class AuthenticationStore {
 	@action doneIntro() {
 		this.firstTime = false;
 	}
-  
+
 	@action login () {
 	  //invariant(!this.isAuthenticating, 'Cannot login while authenticating.')
 	  //invariant(!this.isAuthenticated, 'Cannot login while authenticated.')
@@ -39,9 +47,9 @@ export default class AuthenticationStore {
 	  // more code above, here is the relevant setting of token
   
 	  this.token = token
-	  this.isAuthenticating = false
-
-	  AsyncStorage.setItem('token', token)
+		this.isAuthenticating = false
+		
+		this._save();
 	}
   
 	@action logout () {
@@ -49,6 +57,6 @@ export default class AuthenticationStore {
 	  //invariant(this.isAuthenticated, 'Cannot logout while not authenticated.')
   
 	  this.token = null
-	  AsyncStorage.removeItem('token')
+	  this._clear();
 	}
 }

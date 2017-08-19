@@ -16,11 +16,13 @@ import {
 } from 'react-navigation';
 
 
+import { apiConnector }  from '../navigation/Connectors';
+
 import AppIntro from 'react-native-app-intro';
 import theme from '../constants/Theme';
 
 @inject("authenticationStore")
-export default class LoginScreen extends React.Component {
+class LoginScreen extends React.Component {
 	static navigationOptions = {
 		header: null
 	};
@@ -44,12 +46,16 @@ class Login extends React.Component {
 
 			switch (type) {
 				case 'success': {
-					const response = await fetch(`https://graph.facebook.com/me?fields=name,email,picture&access_token=${token}`);
-					const profile = await response.json();
-					Alert.alert(
-						'Logged in!',
-						`Hi! ${profile.name}`,
-					);
+					const fbResponse = await fetch(`https://graph.facebook.com/me?fields=name,email,picture&access_token=${token}`);
+					const profile = await fbResponse.json();
+					const response = await this.props.Api.loginWithFacebook(token);
+					console.log(response);
+					if(response.ok){
+						Alert.alert(
+							'Logged in!',
+							`Hi! ${profile.name}`,
+						);
+					}
 					break;
 				}
 				case 'cancel': {
@@ -125,3 +131,5 @@ class Login extends React.Component {
 	}
 
 }
+
+export default apiConnector(LoginScreen);
