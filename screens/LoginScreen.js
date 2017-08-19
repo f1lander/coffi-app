@@ -49,7 +49,7 @@ class Login extends React.Component {
 					const fbResponse = await fetch(`https://graph.facebook.com/me?fields=name,email,picture&access_token=${token}`);
 					const profile = await fbResponse.json();
 					const response = await this.props.Api.loginWithFacebook(token);
-					console.log(response);
+					//this.props.authenticationStore.login(response.data['access_token']);
 					if(response.ok){
 						Alert.alert(
 							'Logged in!',

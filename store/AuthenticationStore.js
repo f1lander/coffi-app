@@ -38,18 +38,19 @@ export default class AuthenticationStore {
 		this.firstTime = false;
 	}
 
-	@action login () {
+	@action login (token) {
 	  //invariant(!this.isAuthenticating, 'Cannot login while authenticating.')
 	  //invariant(!this.isAuthenticated, 'Cannot login while authenticated.')
-  
-	  this.isAuthenticating = true
-  
+
 	  // more code above, here is the relevant setting of token
-  
-	  this.token = token
-		this.isAuthenticating = false
-		
-		this._save();
+	
+		if(token){
+			this.isAuthenticating = true;
+			this.token = token;
+			this._save().then(() => {
+				this.isAuthenticating = false;
+			});
+		}
 	}
   
 	@action logout () {
