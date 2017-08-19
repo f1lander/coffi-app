@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+	Alert,
 	Image,
 	Text,
 	View,
@@ -24,10 +25,21 @@ export default class LoginScreen extends React.Component {
 		header: null
 	};
 
-	_handleFacebookLogin = async () => {
+	render() {
+		return (
+			<Login {...this.props}/>
+		);
+	}
+}
+
+@inject("authenticationStore")
+@observer
+class Login extends React.Component {
+
+	async onPressLoginWithFb() {
 		try {
 			const { type, token, expires } = await Facebook.logInWithReadPermissionsAsync(
-				'1573625069363621', { permissions: ['public_profile', 'email'] }
+				'113119379370031', { permissions: ['public_profile', 'email'] }
 			);
 
 			switch (type) {
@@ -36,10 +48,8 @@ export default class LoginScreen extends React.Component {
 					const profile = await response.json();
 					Alert.alert(
 						'Logged in!',
-						`Hi ${profile.name}!`,
+						`Hi! ${profile.name}`,
 					);
-					console.log(expires);
-					console.log(profile);
 					break;
 				}
 				case 'cancel': {
@@ -61,22 +71,8 @@ export default class LoginScreen extends React.Component {
 				'Oops!',
 				'Login failed!',
 			);
+			console.warn(e);
 		}
-	};
-
-	render() {
-		return (
-			<Login {...this.props}/>
-		);
-	}
-}
-
-@inject("authenticationStore")
-@observer
-class Login extends React.Component {
-
-	onLoginWithFbPress() {
-
 	}
 
 	render() {
@@ -107,7 +103,7 @@ class Login extends React.Component {
 					<Image style={theme.dayImage} source={require('../assets/images/bg.jpg')}>
 						<Image source={require('../assets/images/logo-c2.png')} style={theme.dayImageIcon} />
 						<AnnieText style={theme.dayWelcome}>Bienvenido!</AnnieText>
-						<TouchableOpacity onPress={this.onLoginWithFbPress.bind(this) } style={{ height: 46, marginTop: 14 }}>
+						<TouchableOpacity onPress={this.onPressLoginWithFb.bind(this) } style={{ height: 46, marginTop: 14 }}>
 							<View style={theme.btnWrap}>
 								<Image source={require('../assets/images/facebook.png')} style={theme.btnImage} />
 								<Text style={[theme.platoCoinText, { fontSize: 14 }]}>INICIAR SESION</Text>
@@ -125,7 +121,7 @@ class Login extends React.Component {
 	}
 
 	_handlePressRegister = () => {
-		this.props.navigation.navigate('RegisterScreen');
+		this.props.navigation.navigate('Register');
 	}
 
 }

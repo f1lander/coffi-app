@@ -78,55 +78,7 @@ const create = (baseURL = BASE_URL) => {
   const updateProfile = (data) => api.patch('/users/me', data)
 
   const resetPassword = (data) => api.post('/users/reset', data)
-
-  const getNotifications = () => api.get('/users/me/notifications')
-
-  const getNotificationById = (id) => api.get(`/users/me/notifications/${id}`)
-
-  const getFriendsRequests = () => api.get('/users/friends-requests')
-
-  const getUserProfile = (id = 'me') => api.get(`/users/${id}/profile`)
-
-  const searchUsers = (query) => api.get(`/users/search?query=${query}`)
-
-  const getUserFriends = (id = 'me') => api.get(`/users/${id}/list-friends`)
-
-  const addFriendById = (id) => api.post(`/users/${id}/add-friend`)
-
-  const removeFriendById = (id) => api.post(`/users/${id}/unfriend`)
-
-  const blockUserById = (id) => api.post(`/users/${id}/block`)
-
-  const unblockUserById = (id) => api.post(`/users/${id}/unblock`)
-
-  const checkFriendship = (id) => api.get(`/users/${id}/check-friendship`)
-
-  const getUserAvatar = (id, redirect=true, size=small) => api.get(`/users/${id}/avatar?s=${size}&redirect=${redirect ? 'true': 'false' }`)
-
-  const setAlarm = (data) => api.post('/alarms', data)
-
-  const getFriendsAlarms = () => api.get('/alarms/friends-alarms')
-
-  const getAlarmById = (id) => api.get(`/alarms/${id}`)
-
-  const updateAlarmById = (id, data) => api.patch(`/alarms/${id}`, data)
-
-  const removeAlarmById = (id) => api.delete(`/alarms/${id}`)
-
-  const turnOffAlarmById = (id) => api.post(`/alarms/${id}/turn-off`)
-
-  const calcAlarmSignature = (id) => api.get(`/alarms/${id}/calc-signature`)
-
-  const sendVoiceNote = (data) => api.post('/alarms/send-voice-note', data)
-
-  const getCurrentAlarm = (userId = 'me') => api.get(`/users/${userId}/currentAlarm`)
-
-  const getVoiceNote = (alarmId, voiceNoteId) => api.get(`/alarms/${alarmId}/voicenotes/${voiceNoteId}`)
-
-  const getVoiceNotes = (alarmId, filter = {}) => api.get(`/alarms/${alarmId}/voicenotes?filter=${JSON.stringify({include: 'sender', ...filter})}`)
-
-  const markVoiceNoteAsListened = (alarmId, voiceNoteId) => api.post(`/alarms/${alarmId}/voicenotes/${voiceNoteId}/mark-as-listened`)
-
+  
   // ------
   // STEP 3
   // ------
@@ -147,29 +99,6 @@ const create = (baseURL = BASE_URL) => {
     userRegister,
     resetPassword,
     updateProfile,
-    getNotifications,
-    getNotificationById,
-    getFriendsRequests,
-    getFriendsAlarms,
-    getUserProfile,
-    searchUsers,
-    getUserFriends,
-    addFriendById,
-    removeFriendById,
-    blockUserById,
-    unblockUserById,
-    checkFriendship,
-    getUserAvatar,
-    setAlarm,
-    getAlarmById,
-    updateAlarmById,
-    removeAlarmById,
-    turnOffAlarmById,
-    calcAlarmSignature,
-    sendVoiceNote,
-    getCurrentAlarm,
-    getVoiceNotes,
-    markVoiceNoteAsListened
   }
 }
 
