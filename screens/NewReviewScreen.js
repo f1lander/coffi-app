@@ -24,12 +24,12 @@ export default class ImagePickerExample extends React.Component {
         />
         {image &&
           <Image source={{ uri: image }} style={{ top: 10, width: 200, height: 200 }} />}
-
       </View>
     );
   }
 
   _pickImage = async () => {
+    const { navigate } = this.props.navigation;
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [4, 3],
@@ -54,8 +54,16 @@ export default class ImagePickerExample extends React.Component {
         
         })
       }).then(response => response.json())
-      .then(responseJson => window.alert(JSON.stringify(responseJson)))
-      .catch(error => window.alert("Error"));
+      .then(responseJson => {
+        window.alert(JSON.stringify(responseJson))
+        if(responseJson.id){
+          navigate('Coffee', { id: responseJson.id})
+        }
+      })
+      .catch(error => {
+        window.alert("Error");
+        console.error(error);
+      });
       
     }
 

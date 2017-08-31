@@ -5,6 +5,7 @@ import { StackNavigator } from 'react-navigation';
 import Colors from '../constants/Colors';
 
 import MainTabNavigator from './MainTabNavigator';
+import CoffeeScreen from '../screens/CoffeeScreen';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
 const RootStackNavigator = StackNavigator(
@@ -12,8 +13,10 @@ const RootStackNavigator = StackNavigator(
 		Main: {
 			screen: MainTabNavigator,
 			path: '/tabs'
+		},
+		Coffee: {
+			screen: CoffeeScreen
 		}
-		
 	},
 	{
 		navigationOptions: () => ({
