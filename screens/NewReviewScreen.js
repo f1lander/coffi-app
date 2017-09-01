@@ -12,6 +12,10 @@ export default class ImagePickerExample extends React.Component {
     title: 'Add Review',
   };
 
+  componentDidMount(){
+    const { navigate } = this.props.navigation;
+  }
+
 
   render() {
     let { image } = this.state;

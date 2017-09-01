@@ -10,7 +10,6 @@ export default class FriendsScreen extends Component {
       <Container>
         <Content>
           <List>
-
             <ListItem avatar>
               <Left>
                 <Thumbnail source={require('../assets/images/color/user.png')} />

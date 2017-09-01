@@ -57,6 +57,7 @@ export default class NewsScreen extends React.Component {
         spacing={4}
         starSize={10}
         backingColor='#fafafa'
+        disabled={true}
         count={5}
         fullStar={require('../node_modules/react-native-stars/example-images/starFilled.png')}
         emptyStar={require('../node_modules/react-native-stars/example-images/starEmpty.png')}

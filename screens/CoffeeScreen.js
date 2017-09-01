@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
-import { Container, Content, Card, CardItem, Text, Icon, Button } from 'native-base';
+import { Container, Content, Card, CardItem, Left, Right, Body, Text, Icon, Button, Thumbnail } from 'native-base';
 
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 
@@ -35,6 +35,76 @@ export default class CoffeeScreen extends React.Component {
 
   constructor(props){
     super(props);
+    this.state = {
+        reviews: [
+          {
+            id: 1,
+            username: "filander",
+            comment: "Muy Buen cafe",
+            location: "San Pedro Sula",
+            coffeName: "Cafe 504",
+            rate: 4.5,
+            avatarUrl: "https://placeimg.com/100/100/nature",
+            imageUrl: "https://placeimg.com/640/480/nature",
+            timeAgo: "11h ago"
+          },
+          {
+            id: 2,
+            username: "filander",
+            comment: "No muy bueno",
+            location: "San Pedro Sula",
+            coffeName: "Cafe ORO",
+            rate: 1.5,
+            avatarUrl: "https://placeimg.com/100/100/nature",
+            imageUrl: "https://placeimg.com/640/480/nature",
+            timeAgo: "11h ago"
+          }
+        ]
+      }
+  }
+
+  _renderStar = (rating) => {
+    return (
+      <Stars half={true}
+        rating={rating}
+        spacing={4}
+        starSize={10}
+        backingColor='#fafafa'
+        disabled={true}
+        count={5}
+        fullStar={require('../node_modules/react-native-stars/example-images/starFilled.png')}
+        emptyStar={require('../node_modules/react-native-stars/example-images/starEmpty.png')}
+        halfStar={require('../node_modules/react-native-stars/example-images/starHalf.png')} />
+    )
+  }
+
+  _renderCard(data){
+    return (
+      <Card>
+        <CardItem>
+          <Left>
+            <Thumbnail source={{ uri: data.avatarUrl }} />
+            <Body>
+              <Text>{ data.username }</Text>
+              <Text note>{ data.location }</Text>
+            </Body>
+          </Left>
+        </CardItem>
+        <CardItem>
+          <View style={{ flex: 1 }}>
+            <Text>{ data.comment }</Text>
+          </View>
+        </CardItem>
+        <CardItem>
+          <Left>
+            {this._renderStar(data.rate)}
+          </Left>
+          <Right>
+            <Text>{ data.timeAgo }</Text>
+          </Right>
+        </CardItem>
+      </Card>
+    )
   }
 
   render() {
@@ -49,7 +119,7 @@ export default class CoffeeScreen extends React.Component {
             backgroundSpeed={10}
             renderBackground={() => (
               <View key="background">
-                <Image source={{uri: 'https://i.ytimg.com/vi/P-NZei5ANaQ/maxresdefault.jpg',
+                <Image source={{uri: 'http://www.juanvaldezcafe.com/sites/default/files/cumbre_descafeinado.jpg',
                                 width: window.width,
                                 height: PARALLAX_HEADER_HEIGHT}}/>
                 <View style={{position: 'absolute',
@@ -61,35 +131,88 @@ export default class CoffeeScreen extends React.Component {
             )}
             renderForeground={() => (
               <View key="parallax-header" style={ styles.parallaxHeader }>
-                <Image style={ styles.avatar } source={{
-                  uri: 'https://pbs.twimg.com/profile_images/2694242404/5b0619220a92d391534b0cd89bf5adc1_400x400.jpeg',
-                  width: AVATAR_SIZE,
-                  height: AVATAR_SIZE
-                }}/>
-                <Text style={ styles.sectionCoffeeText }>
-                  Talks by Rich Hickey
-                </Text>
-                <Text style={ styles.sectionTitleText }>
-                  CTO of Cognitec, Creator of Clojure
-                </Text>
+                <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                    <View style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+                        <Image style={ styles.avatar } source={{
+                            uri: 'http://www.juanvaldezcafe.com/sites/default/files/cumbre_descafeinado.jpg',
+                            width: AVATAR_SIZE,
+                            height: AVATAR_SIZE
+                        }}/>
+                    </View>
+                    <View style={{flex: 1}}>
+                        <Text style={styles.reviewValue}>2.5</Text>
+                        <View style={{flex: 1, flexWrap: 'wrap'}}>
+                            <Stars
+                                disabled={true}
+                                half={true}
+                                rating={2.5}
+                                update={(val)=>{this.setState({stars: val})}}
+                                spacing={4}
+                                starSize={15}
+                                tintColor={'white'}
+                                count={5}/>
+                        </View>
+                    </View>
+                </View>
+                <View style={{flex: 1, flexDirection: 'row', paddingHorizontal: 30}}>
+                    <View style={{flex: 1, flexDirection: 'column'}}>
+                        <Text style={ styles.sectionCoffeeText }>
+                            Juan Valdez
+                        </Text>
+                        <Text style={ styles.sectionTitleText }>
+                            Colombia
+                        </Text>
+                    </View>
+                </View>
               </View>
             )}
 
             renderStickyHeader={() => (
               <View key="sticky-header" style={styles.stickySection}>
-                <Text style={styles.stickySectionText}>Rich Hickey Talks</Text>
+                <Text style={styles.stickySectionText}>Juan Valdez Coffee</Text>
               </View>
             )}
 
             renderFixedHeader={() => (
               <View key="fixed-header" style={styles.fixedSection}>
                 <TouchableOpacity onPress={() => goBack()} style={{flexWrap: 'wrap'}}>
-                    <Text style={styles.fixedSectionText}>  Back
-                    </Text>
+                    <Icon ios='ios-arrow-round-back' android="md-arrow-back" style={styles.fixedSectionIcon}/>
                 </TouchableOpacity>
               </View>
-        )}>
-            <View style={{ alignItems: 'center' }}><Text style={{ fontSize: 30 }}>Meow!</Text></View>
+            )}>
+
+            <View style={{padding: 4}}>
+                <Card>
+                    <CardItem>
+                        <View style={{flex: 1, alignItems: 'center', padding: 10, backgroundColor: '#eff0f2'}}>
+                            <Text style={{fontWeight: 'bold', paddingVertical: 10}}>Give it a review!</Text>
+                            <Stars
+                                half={true}
+                                rating={2.5}
+                                update={(val)=>{this.setState({stars: val})}}
+                                spacing={4}
+                                starSize={40}
+                                tintColor={'#d87504'}
+                                count={5}/>
+                        </View>
+                    </CardItem>
+                    <CardItem>
+                        <Button block light>
+                            <Text>Send Review</Text>
+                        </Button>
+                    </CardItem>
+                </Card>
+                <Card>
+                    <CardItem header>
+                        <Text>Reviews</Text>
+                    </CardItem>
+                </Card>
+                {
+                    this.state.reviews.map(x => {
+                        return this._renderCard(x);
+                    })
+                }
+            </View>
           </ParallaxScrollView>
         </View>
       </View>
@@ -114,8 +237,13 @@ const styles = StyleSheet.create({
     width: 300,
     justifyContent: 'flex-end'
   },
-  stickySectionText: {
+  reviewValue: {
     textAlign: 'center',
+    fontSize: 40,
+    color: 'white',
+  },
+  stickySectionText: {
+    marginLeft: 50,
     color: 'white',
     fontSize: 20,
     margin: 10
@@ -125,7 +253,7 @@ const styles = StyleSheet.create({
     bottom: 10,
     left: 10
   },
-  fixedSectionText: {
+  fixedSectionIcon: {
     color: '#999',
     fontSize: 20
   },
@@ -140,11 +268,13 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   sectionCoffeeText: {
+    textAlign: 'left',
     color: 'white',
     fontSize: 24,
-    paddingVertical: 5
+    paddingBottom: 5
   },
   sectionTitleText: {
+    textAlign: 'left',
     color: 'white',
     fontSize: 18,
     paddingVertical: 5
