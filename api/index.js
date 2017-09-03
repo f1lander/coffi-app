@@ -1,6 +1,7 @@
 import { AsyncStorage } from 'react-native'
 
-const BASE_URL = 'https://cofi-api.herokuapp.com/api';
+//const BASE_URL = 'https://cofi-api.herokuapp.com/api';
+const BASE_URL = 'http://192.168.1.125:3000/api';
 
 const AUTH_FACEBOOK_CALLBACK_URL = 'https://cofi-api.herokuapp.com/auth/facebook/callback';
 // a library to wrap and simplify api calls

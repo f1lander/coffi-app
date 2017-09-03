@@ -3,7 +3,6 @@ import { Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
 
-
 import Colors from '../constants/Colors';
 
 import ProfileScreen from '../screens/ProfileScreen';
@@ -23,14 +22,12 @@ export default TabNavigator(
     NewReview: {
       screen: NewReviewScreen,
     },
-
     Friends: {
       screen: FriendsScreen,
     },
     Profile: {
       screen: ProfileScreen,
     },
-
   },
   {
     navigationOptions: ({ navigation }) => ({
@@ -58,7 +55,7 @@ export default TabNavigator(
         return (
           <Ionicons
             name={iconName}
-            size={32}
+            size={32}            
             style={{ marginBottom: -3 }}
             color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
           />

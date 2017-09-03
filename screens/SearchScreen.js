@@ -37,42 +37,7 @@ export default class SearchScreen extends React.Component {
           contentContainerStyle={styles.contentContainer}>
               <Container>
                 <Content>
-                    <Card>
-                        <CardItem>              
-                            <Icon name="calculator" style={{ color: '#DD5044' }} />
-                            <Text style={{flex: 1}}>Price</Text>
-                            <CheckBox checked={true} />
-                        </CardItem>
-                        <CardItem>
-                          <View style={{flex: 1}}>
-                            <Slider
-                              value={this.state.value}
-                              onValueChange={(value) => this.setState({value})} />
-                          </View>              
-                        </CardItem>
-                        <CardItem>              
-                            <Icon name="star-half" style={{ color: '#DD5044' }} />
-                            <Text style={{flex: 1}}>Ranking</Text>
-                            <CheckBox checked={true} />
-                        </CardItem>
-                        <CardItem>
-                          <View style={{flex: 1}}>
-                          <Stars
-                            half={true}
-                            rating={2.5}
-                            update={(val)=>{this.setState({stars: val})}}
-                            spacing={4}
-                            starSize={40}
-                            count={5}
-                            fullStar={require('../node_modules/react-native-stars/example-images/starFilled.png')}
-                            emptyStar={require('../node_modules/react-native-stars/example-images/starEmpty.png')}
-                            halfStar={require('../node_modules/react-native-stars/example-images/starHalf.png')}/>
-                          </View>                  
-                        </CardItem>
-                   </Card>
-                   <Button full>
-                     <Text>Search</Text>
-                   </Button>
+                    
                 </Content>
             </Container>
         </ScrollView>

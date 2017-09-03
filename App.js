@@ -68,6 +68,10 @@ export default class App extends React.Component {
 					{ 'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf') },
 					{ 'annie': require('./assets/fonts/Aniie.ttf') },
 					{ 'ticket': require('./assets/fonts/Ticketing.ttf') },
+					{ 'nunito-semi-bold': require('./assets/fonts/Nunito-SemiBold.ttf') },
+					{ 'nunito-bold': require('./assets/fonts/Nunito-Bold.ttf') },
+					{ 'nunito-light': require('./assets/fonts/Nunito-Light.ttf') },
+					{ 'nunito-regular': require('./assets/fonts/Nunito-Regular.ttf') },
 				]),
 			]);
 		} catch (e) {

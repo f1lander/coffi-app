@@ -33,3 +33,47 @@ export class TicketText extends React.Component {
     );
   }
 }
+
+export class NunitoSemiBoldText extends React.Component {
+  render() {
+    return (
+      <Text
+        {...this.props}
+        style={[this.props.style, { fontFamily: 'nunito-semi-bold' }]}
+      />
+    );
+  }
+}
+
+export class NunitoRegularText extends React.Component {
+  render() {
+    return (
+      <Text
+        {...this.props}
+        style={[this.props.style, { fontFamily: 'nunito-regular' }]}
+      />
+    );
+  }
+}
+
+export class NunitoLightText extends React.Component {
+  render() {
+    return (
+      <Text
+        {...this.props}
+        style={[this.props.style, { fontFamily: 'nunito-light' }]}
+      />
+    );
+  }
+}
+
+export class NunitoBoldText extends React.Component {
+  render() {
+    return (
+      <Text
+        {...this.props}
+        style={[this.props.style, { fontFamily: 'nunito-bold' }]}
+      />
+    );
+  }
+}

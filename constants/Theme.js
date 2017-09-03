@@ -84,6 +84,8 @@ const styles = StyleSheet.create({
 		textAlign: 'center' 
 	},
 
+
+
 	// PLATOS
 	'platosView': {
 		justifyContent: 'center',

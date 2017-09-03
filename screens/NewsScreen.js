@@ -11,7 +11,7 @@ import { WebBrowser } from 'expo';
 
 import Stars from 'react-native-stars';
 
-import { MonoText } from '../components/StyledText';
+import { NunitoRegularText } from '../components/StyledText';
 
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
 
@@ -47,57 +47,10 @@ export default class NewsScreen extends React.Component {
   }
 
   static navigationOptions = {
-    title: "Recents Tasting",
+    title: "Coffii TimeLine",
   };
 
-  _renderStar = (rating) => {
-    return (
-      <Stars half={true}
-        rating={rating}
-        spacing={4}
-        starSize={10}
-        backingColor='#fafafa'
-        count={5}
-        fullStar={require('../node_modules/react-native-stars/example-images/starFilled.png')}
-        emptyStar={require('../node_modules/react-native-stars/example-images/starEmpty.png')}
-        halfStar={require('../node_modules/react-native-stars/example-images/starHalf.png')} />
-    )
-  }
-
-  _renderCard(data){
-    return (
-      <Card>
-        <CardItem>
-          <Left>
-            <Thumbnail source={{ uri: data.avatarUrl }} />
-            <Body>
-              <Text>{ data.username }</Text>
-              <Text note>{ data.location }</Text>
-            </Body>
-          </Left>
-        </CardItem>
-        <CardItem>
-          <View style={{ flex: 1 }}>
-            <Text>{ data.comment }</Text>
-          </View>
-        </CardItem>
-        <CardItem cardBody>
-          <Image source={{ uri: data.imageUrl }} style={{ height: 200, width: null, flex: 1 }} />
-        </CardItem>
-        <CardItem>
-          <Left>
-            {this._renderStar(data.rate)}
-          </Left>
-          <Body>
-            <Text>{ data.coffeName }</Text>
-          </Body>
-          <Right>
-            <Text>{ data.timeAgo }</Text>
-          </Right>
-        </CardItem>
-      </Card>
-    )
-  }
+ 
 
   render() {
     return (
@@ -106,13 +59,9 @@ export default class NewsScreen extends React.Component {
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
           <Content>
-            {
-              this.state.reviews.map(x => {
-                return this._renderCard(x);
-              })
-            }
+          
           </Content>
-        </ScrollView>      
+        </ScrollView>
       </View>
     );
   }

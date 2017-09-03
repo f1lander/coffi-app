@@ -4,12 +4,14 @@ import {
 	Image,
 	Text,
 	View,
-	TouchableOpacity
+	TouchableOpacity,
+	Animated
 } from 'react-native';
 import { MonoText, AnnieText } from '../components/StyledText';
 import { WebBrowser, Constants, Facebook } from 'expo';
 import { observer, inject } from "mobx-react";
 import { Toast } from "native-base";
+import Animation from 'lottie-react-native';
 
 import {
 	StackNavigator,
