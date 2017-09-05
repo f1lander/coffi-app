@@ -3,6 +3,8 @@ import { Button, Image, View } from 'react-native';
 import { ImagePicker } from 'expo';
 import { api } from "../api";
 
+import { apiConnector }  from '../navigation/Connectors';
+
 export class ScanCoffeeScreen extends React.Component {
   state = {
     image: null,
