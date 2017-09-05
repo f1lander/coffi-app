@@ -20,6 +20,8 @@ import Slider from 'react-native-slider';
 
 import Stars from 'react-native-stars';
 
+import { apiConnector }  from '../navigation/Connectors';
+
 const window = Dimensions.get('window');
 
 const AVATAR_SIZE = 120;
@@ -27,7 +29,7 @@ const ROW_HEIGHT = 60;
 const PARALLAX_HEADER_HEIGHT = 350;
 const STICKY_HEADER_HEIGHT = 70;
 
-export default class CoffeeScreen extends React.Component {
+class CoffeeScreen extends React.Component {
   static navigationOptions = {
     title: "Coffee Detail",
     header: null
@@ -36,31 +38,59 @@ export default class CoffeeScreen extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-        reviews: [
-          {
-            id: 1,
-            username: "filander",
-            comment: "Muy Buen cafe",
-            location: "San Pedro Sula",
-            coffeName: "Cafe 504",
-            rate: 4.5,
-            avatarUrl: "https://placeimg.com/100/100/nature",
-            imageUrl: "https://placeimg.com/640/480/nature",
-            timeAgo: "11h ago"
-          },
-          {
-            id: 2,
-            username: "filander",
-            comment: "No muy bueno",
-            location: "San Pedro Sula",
-            coffeName: "Cafe ORO",
-            rate: 1.5,
-            avatarUrl: "https://placeimg.com/100/100/nature",
-            imageUrl: "https://placeimg.com/640/480/nature",
-            timeAgo: "11h ago"
-          }
-        ]
+        loadingCoffee: true,
+        loadingReviews: true,
+        loadingPeronalReviews: true,
+        personalReviews: null,
+        reviews: [],
+        data: {},
+    }
+  }
+
+  componentDidMount(){
+    const { params } = this.props.navigation.state;
+
+    this.props.Api.getReviewsByCoffeeId(params.id)
+    .then(response => {
+      if(response.ok){
+        this.setState({
+          reviews: response.data,
+          loadingReviews: false
+        });
+      }else{
+        this.setState({
+          loadingReviews: false
+        });
       }
+    })
+
+    this.props.Api.getCoffeeById(params.id)
+    .then(response => {
+      if(response.ok){
+        this.setState({
+          data: response.data,
+          loadingCoffee: false
+        });
+      }else{
+        this.setState({
+          loadingCoffee: false
+        });
+      }
+    })
+
+    this.props.Api.getMyReviewsByCoffeeId(params.id)
+    .then(response => {
+      if(response.ok){
+        this.setState({
+          personalReviews: response.data,
+          loadingPeronalReviews: false
+        });
+      }else{
+        this.setState({
+          loadingPeronalReviews: false
+        });
+      }
+    })
   }
 
   _renderStar = (rating) => {
@@ -85,8 +115,8 @@ export default class CoffeeScreen extends React.Component {
           <Left>
             <Thumbnail source={{ uri: data.avatarUrl }} />
             <Body>
-              <Text>{ data.username }</Text>
-              <Text note>{ data.location }</Text>
+              <Text>{ data.user && data.user.username }</Text>
+              <Text note>{ data.user && data.user.location }</Text>
             </Body>
           </Left>
         </CardItem>
@@ -97,10 +127,10 @@ export default class CoffeeScreen extends React.Component {
         </CardItem>
         <CardItem>
           <Left>
-            {this._renderStar(data.rate)}
+            {this._renderStar(data.rating)}
           </Left>
           <Right>
-            <Text>{ data.timeAgo }</Text>
+            <Text>{ data.updatedAt && data.updatedAt.toString() }</Text>
           </Right>
         </CardItem>
       </Card>
@@ -109,6 +139,10 @@ export default class CoffeeScreen extends React.Component {
 
   render() {
     const { goBack } = this.props.navigation;
+    const { data } = this.state;
+    if(!data){
+      return <View></View>
+    }
     return (
       <View style={styles.container}>
         <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -140,12 +174,12 @@ export default class CoffeeScreen extends React.Component {
                         }}/>
                     </View>
                     <View style={{flex: 1}}>
-                        <Text style={styles.reviewValue}>2.5</Text>
+                        <Text style={styles.reviewValue}>{ data.avg_rating || '-' }</Text>
                         <View style={{flex: 1, flexWrap: 'wrap'}}>
                             <Stars
                                 disabled={true}
                                 half={true}
-                                rating={2.5}
+                                rating={data.avg_rating || 0}
                                 update={(val)=>{this.setState({stars: val})}}
                                 spacing={4}
                                 starSize={15}
@@ -157,10 +191,13 @@ export default class CoffeeScreen extends React.Component {
                 <View style={{flex: 1, flexDirection: 'row', paddingHorizontal: 30}}>
                     <View style={{flex: 1, flexDirection: 'column'}}>
                         <Text style={ styles.sectionCoffeeText }>
-                            Juan Valdez
+                            { data.brand &&  data.brand.name }
+                        </Text>
+                        <Text style={ styles.sectionCoffeeText }>
+                            { ((data.model || 'Original')  + ', ' + (data.variety &&  (data.variety.name || data.variety.description))) }
                         </Text>
                         <Text style={ styles.sectionTitleText }>
-                            Colombia
+                           { data.brand && data.brand.country}
                         </Text>
                     </View>
                 </View>
@@ -169,7 +206,7 @@ export default class CoffeeScreen extends React.Component {
 
             renderStickyHeader={() => (
               <View key="sticky-header" style={styles.stickySection}>
-                <Text style={styles.stickySectionText}>Juan Valdez Coffee</Text>
+                <Text style={styles.stickySectionText}>{ data.brand &&  data.brand.name } Coffee</Text>
               </View>
             )}
 
@@ -188,7 +225,7 @@ export default class CoffeeScreen extends React.Component {
                             <Text style={{fontWeight: 'bold', paddingVertical: 10}}>Give it a review!</Text>
                             <Stars
                                 half={true}
-                                rating={2.5}
+                                rating={0}
                                 update={(val)=>{this.setState({stars: val})}}
                                 spacing={4}
                                 starSize={40}
@@ -292,3 +329,5 @@ const styles = StyleSheet.create({
     fontSize: 20
   }
 });
+
+export default apiConnector(CoffeeScreen);

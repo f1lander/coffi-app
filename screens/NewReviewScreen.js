@@ -3,7 +3,7 @@ import { Button, Image, View } from 'react-native';
 import { ImagePicker } from 'expo';
 import { api } from "../api";
 
-export default class ImagePickerExample extends React.Component {
+export class ScanCoffeeScreen extends React.Component {
   state = {
     image: null,
   };
@@ -14,6 +14,7 @@ export default class ImagePickerExample extends React.Component {
 
   componentDidMount(){
     const { navigate } = this.props.navigation;
+    //navigate('Coffee', { id: "59ae0b46ce8f3d00112af083"});
   }
 
 
@@ -47,29 +48,20 @@ export default class ImagePickerExample extends React.Component {
     }
 
     if (result.base64) {
-      fetch('https://cofi-api.herokuapp.com/api/coffees/search/', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          image: result.base64,
-        
-        })
-      }).then(response => response.json())
-      .then(responseJson => {
-        window.alert(JSON.stringify(responseJson))
-        if(responseJson.id){
-          navigate('Coffee', { id: responseJson.id})
+      this.props.Api.searchCoffee({
+        image: result.base64
+      }).then(response => {
+        if(response.ok && response.data){
+          if(response.data.id){
+            navigate('Coffee', { id: response.data.id});
+          }
+        }else{
+          window.alert("Error");
         }
-      })
-      .catch(error => {
-        window.alert("Error");
-        console.error(error);
       });
-      
     }
 
   };
 }
+
+export default apiConnector(ScanCoffeeScreen);

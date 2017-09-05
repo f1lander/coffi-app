@@ -1,6 +1,6 @@
 import { AsyncStorage } from 'react-native'
 
-const BASE_URL = 'https://cofi-api.herokuapp.com/api';
+export const BASE_URL = 'https://cofi-api.herokuapp.com/api';
 
 const AUTH_FACEBOOK_CALLBACK_URL = 'https://cofi-api.herokuapp.com/auth/facebook/callback';
 // a library to wrap and simplify api calls
@@ -51,6 +51,8 @@ const create = (baseURL = BASE_URL) => {
       response.data.error.code === 'INVALID_TOKEN'){
 		  console.log('Invalid token')
     }
+
+    console.log(response);
   })
 
   // ------
@@ -81,6 +83,19 @@ const create = (baseURL = BASE_URL) => {
   const resetPassword = (data) => api.post('/users/reset', data)
 
   const loginWithFacebook = (accessToken) => api.get(`${AUTH_FACEBOOK_CALLBACK_URL}?access_token=${accessToken}`)
+
+  const getCoffeeById = (id) => api.get(`/coffees/${id}`);
+
+  const getReviewsByCoffeeId = (id) => api.get(`/coffees/${id}/reviews`);
+
+  const getMyReviewsByCoffeeId = (id) => api.get(`/coffees/${id}/my-reviews`);
+
+  const sendCoffeeReview = (id, data) => api.post(`/coffees/${id}/send-review`, data);
+
+  const getPreparationsMethods = () => api.get('/methods')
+
+  const searchCoffee = (data) => api.post('/coffees/search/', data)
+
   
   // ------
   // STEP 3
@@ -102,7 +117,13 @@ const create = (baseURL = BASE_URL) => {
     userRegister,
     resetPassword,
 	  updateProfile,
-	  loginWithFacebook
+    loginWithFacebook,
+    getReviewsByCoffeeId,
+    getMyReviewsByCoffeeId,
+    getCoffeeById,
+    sendCoffeeReview,
+    getPreparationsMethods,
+    searchCoffee
   }
 }
 
