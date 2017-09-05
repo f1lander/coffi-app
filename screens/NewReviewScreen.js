@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, Image, View } from 'react-native';
 import { ImagePicker } from 'expo';
-import { api } from "../api";
 
 import { apiConnector }  from '../navigation/Connectors';
 
@@ -53,9 +52,11 @@ export class ScanCoffeeScreen extends React.Component {
       this.props.Api.searchCoffee({
         image: result.base64
       }).then(response => {
-        if(response.ok && response.data){
-          if(response.data.id){
+        if(response.ok){
+          if(response.data && response.data.id){
             navigate('Coffee', { id: response.data.id});
+          }else{
+            window.alert('Not found');
           }
         }else{
           window.alert("Error");
