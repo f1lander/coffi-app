@@ -22,6 +22,10 @@ import Stars from 'react-native-stars';
 
 import { apiConnector }  from '../navigation/Connectors';
 
+import { observer, inject } from "mobx-react";
+
+import moment from 'moment';
+
 const window = Dimensions.get('window');
 
 const AVATAR_SIZE = 120;
@@ -29,6 +33,8 @@ const ROW_HEIGHT = 60;
 const PARALLAX_HEADER_HEIGHT = 350;
 const STICKY_HEADER_HEIGHT = 70;
 
+@inject("coffeeStore")
+@observer
 class CoffeeScreen extends React.Component {
   static navigationOptions = {
     title: "Coffee Detail",
@@ -41,56 +47,54 @@ class CoffeeScreen extends React.Component {
         loadingCoffee: true,
         loadingReviews: true,
         loadingPeronalReviews: true,
-        personalReviews: null,
-        reviews: [],
-        data: {},
     }
   }
 
   componentDidMount(){
     const { params } = this.props.navigation.state;
 
-    this.props.Api.getReviewsByCoffeeId(params.id)
-    .then(response => {
-      if(response.ok){
-        this.setState({
-          reviews: response.data,
-          loadingReviews: false
-        });
-      }else{
-        this.setState({
-          loadingReviews: false
-        });
-      }
-    })
-
     this.props.Api.getCoffeeById(params.id)
     .then(response => {
       if(response.ok){
-        this.setState({
-          data: response.data,
-          loadingCoffee: false
-        });
+        if(this.props.coffeeStore.coffees[params.id]){
+          this.props.coffeeStore.updateCoffee(params.id, response.data);
+        }else{
+          this.props.coffeeStore.addCoffee(response.data);
+        }
       }else{
-        this.setState({
-          loadingCoffee: false
-        });
+        console.log(response.problem);
       }
-    })
+
+      this.setState({
+        loadingCoffee: false
+      });
+    });
+
+    this.props.Api.getReviewsByCoffeeId(params.id)
+    .then(response => {
+      if(response.ok){
+        this.props.coffeeStore.updateCoffee(params.id, { reviews: response.data });
+      }else{
+        console.log('Error fetching personal reviews: ' + response.problem);
+      }
+
+      this.setState({
+        loadingPeronalReviews: false
+      });
+    });
 
     this.props.Api.getMyReviewsByCoffeeId(params.id)
     .then(response => {
       if(response.ok){
-        this.setState({
-          personalReviews: response.data,
-          loadingPeronalReviews: false
-        });
+        this.props.coffeeStore.updateCoffee(params.id, { personalReviews: response.data });
       }else{
-        this.setState({
-          loadingPeronalReviews: false
-        });
+        console.log('Error fetching personal reviews: ' + response.problem);
       }
-    })
+
+      this.setState({
+        loadingPeronalReviews: false
+      });
+    });
   }
 
   _renderStar = (rating) => {
@@ -130,7 +134,7 @@ class CoffeeScreen extends React.Component {
             {this._renderStar(data.rating)}
           </Left>
           <Right>
-            <Text>{ data.updatedAt && data.updatedAt.toString() }</Text>
+            <Text>{ data.updatedAt && moment(data.updatedAt).fromNow() }</Text>
           </Right>
         </CardItem>
       </Card>
@@ -139,7 +143,9 @@ class CoffeeScreen extends React.Component {
 
   render() {
     const { goBack } = this.props.navigation;
-    const { data } = this.state;
+    const { params } = this.props.navigation.state;
+    const data = this.props.coffeeStore.coffees[params.id];
+
     if(!data){
       return <View></View>
     }
@@ -245,7 +251,7 @@ class CoffeeScreen extends React.Component {
                     </CardItem>
                 </Card>
                 {
-                    this.state.reviews.map(x => {
+                    data.reviews.map(x => {
                         return this._renderCard(x);
                     })
                 }
