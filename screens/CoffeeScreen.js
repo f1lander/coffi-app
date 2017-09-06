@@ -20,6 +20,8 @@ import Slider from 'react-native-slider';
 
 import Stars from 'react-native-stars';
 
+import StarsAssets from '../assets/images/stars';
+
 import { apiConnector }  from '../navigation/Connectors';
 
 import { observer, inject } from "mobx-react";
@@ -116,9 +118,8 @@ class CoffeeScreen extends React.Component {
         backingColor='#fafafa'
         disabled={true}
         count={5}
-        fullStar={require('../node_modules/react-native-stars/example-images/starFilled.png')}
-        emptyStar={require('../node_modules/react-native-stars/example-images/starEmpty.png')}
-        halfStar={require('../node_modules/react-native-stars/example-images/starHalf.png')} />
+        {...StarsAssets.smallCoffeeBeans}
+      />
     )
   }
 
@@ -269,7 +270,7 @@ class CoffeeScreen extends React.Component {
                         }}/>
                     </View>
                     <View style={{flex: 1}}>
-                        <Text style={styles.reviewValue}>{ data.avg_rating || '-' }</Text>
+                        <Text style={styles.reviewValue}>{ data.avg_rating ? data.avg_rating.toFixed(1) : '-' }</Text>
                         <View style={{flex: 1, flexWrap: 'wrap'}}>
                             <Stars
                                 disabled={true}
@@ -279,7 +280,9 @@ class CoffeeScreen extends React.Component {
                                 spacing={4}
                                 starSize={15}
                                 tintColor={'white'}
-                                count={5}/>
+                                count={5}
+                                {...StarsAssets.smallCoffeeBeans}
+                              />
                         </View>
                     </View>
                 </View>
@@ -326,8 +329,10 @@ class CoffeeScreen extends React.Component {
                                   update={(val)=>{this.updateRaiting(val)}}
                                   spacing={4}
                                   starSize={40}
-                                  tintColor={'#d87504'}
-                                  count={5}/>
+                                  tintColor={'#FFCD30'}
+                                  count={5}
+                                  {...StarsAssets.largeCoffeeBeans}
+                                  />
                           </View>
                         </CardItem>
                       ): (
