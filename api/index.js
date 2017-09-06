@@ -1,10 +1,13 @@
-import { AsyncStorage } from 'react-native'
+import { AsyncStorage } from "react-native"
 
-export const BASE_URL = 'https://cofi-api.herokuapp.com/api';
+// const BASE_URL = "https://cofi-api.herokuapp.com/api";
+const BASE_URL = "http://192.168.0.12:3000/api";
 
-const AUTH_FACEBOOK_CALLBACK_URL = 'https://cofi-api.herokuapp.com/auth/facebook/callback';
+// const AUTH_FACEBOOK_CALLBACK_URL = "https://cofi-api.herokuapp.com/auth/facebook/callback";
+const AUTH_FACEBOOK_CALLBACK_URL = "http://192.168.0.12:3000/auth/facebook/callback";
+
 // a library to wrap and simplify api calls
-import apisauce from 'apisauce'
+import apisauce from "apisauce"
 
 // our "constructor"
 const create = (baseURL = BASE_URL) => {
@@ -19,7 +22,7 @@ const create = (baseURL = BASE_URL) => {
     baseURL,
     // here are some default headers
     headers: {
-      'Content-type' : 'application/json'
+      "Content-type": "application/json"
     },
     // 30 second timeout...
     timeout: 30000
@@ -27,29 +30,29 @@ const create = (baseURL = BASE_URL) => {
 
   // Force OpenWeather API Key on all requests
   // api.addRequestTransform((request) => {
-  //   request.params['APPID'] = '0e44183e8d1018fc92eb3307d885379c'
+  //   request.params["APPID"] = "0e44183e8d1018fc92eb3307d885379c"
   // })
 
-  // Wrap api's addMonitor to allow the calling code to attach
+  // Wrap api"s addMonitor to allow the calling code to attach
   // additional monitors in the future.  But only in __DEV__ and only
-  // if we've attached Reactotron to console (it isn't during unit tests).
-  
+  // if we"ve attached Reactotron to console (it isn"t during unit tests).
+
   /* if (__DEV__ && console.tron) {
     api.addMonitor(console.tron.apisauce)
   }*/
 
   api.addAsyncRequestTransform(request => async () => {
-    const accessToken = await AsyncStorage.getItem('token')
-    if(accessToken){
-      request.headers['Authorization'] = accessToken;
+    const accessToken = await AsyncStorage.getItem("@Coffii:token")
+    if (accessToken) {
+      request.headers["Authorization"] = accessToken;
     }
   })
 
   api.addMonitor((response) => {
-    if(response.status === 401 &&
+    if (response.status === 401 &&
       response.data && response.data.error &&
-      response.data.error.code === 'INVALID_TOKEN'){
-		  console.log('Invalid token')
+      response.data.error.code === "INVALID_TOKEN") {
+      console.log("Invalid token")
     }
 
     console.log(response);
@@ -63,24 +66,32 @@ const create = (baseURL = BASE_URL) => {
   // a thin wrapper of the api layer providing nicer feeling functions
   // rather than "get", "post" and friends.
   //
-  // I generally don't like wrapping the output at this level because
+  // I generally don"t like wrapping the output at this level because
   // sometimes specific actions need to be take on `403` or `401`, etc.
   //
-  // Since we can't hide from that, we embrace it by getting out of the
+  // Since we can"t hide from that, we embrace it by getting out of the
   // way at this level.
   //
 
+  const getProfile = (userId) => api.get(`/users/${userId}`);
+
+  const getReviewsForUser = (userId) => api.get(`/users/${userId}/reviews`);
+
+  const getFollowersForUser = (userId) => api.get(`/users/${userId}/followers`);
+
+  const getFollowingForUser = (userId) => api.get(`/users/${userId}/following`);
+
   const userLogin = (credentials) => api.post(`/users/login?include=user`, credentials)
 
-  const registerDevice = (data) => api.post('/users/register-device', data, {timeout: 50000})
+  const registerDevice = (data) => api.post("/users/register-device", data, { timeout: 50000 })
 
-  const userLogout = () => api.post('/users/logout')
+  const userLogout = () => api.post("/users/logout")
 
-  const userRegister = (data) => api.post('/users', data)
+  const userRegister = (data) => api.post("/users", data)
 
-  const updateProfile = (data) => api.patch('/users/me', data)
+  const updateProfile = (data) => api.patch("/users/me", data)
 
-  const resetPassword = (data) => api.post('/users/reset', data)
+  const resetPassword = (data) => api.post("/users/reset", data)
 
   const loginWithFacebook = (accessToken) => api.get(`${AUTH_FACEBOOK_CALLBACK_URL}?access_token=${accessToken}`)
 
@@ -96,16 +107,16 @@ const create = (baseURL = BASE_URL) => {
 
   const searchCoffee = (data) => api.post('/coffees/search/', data)
 
-  
+
   // ------
   // STEP 3
   // ------
   //
   // Return back a collection of functions that we would consider our
-  // interface.  Most of the time it'll be just the list of all the
+  // interface.  Most of the time it"ll be just the list of all the
   // methods in step 2.
   //
-  // Notice we're not returning back the `api` created in step 1?  That's
+  // Notice we"re not returning back the `api` created in step 1?  That"s
   // because it is scoped privately.  This is one way to create truly
   // private scoped goodies in JavaScript.
   //
@@ -116,7 +127,7 @@ const create = (baseURL = BASE_URL) => {
     userLogout,
     userRegister,
     resetPassword,
-	  updateProfile,
+    updateProfile,
     loginWithFacebook,
     getReviewsByCoffeeId,
     getMyReviewsByCoffeeId,
@@ -124,10 +135,16 @@ const create = (baseURL = BASE_URL) => {
     sendCoffeeReview,
     getPreparationsMethods,
     searchCoffee,
+    updateProfile,
+    loginWithFacebook,
+    getProfile,
+    getFollowersForUser,
+    getFollowingForUser,
+    getReviewsForUser
   }
 }
 
-// let's return back our create method as the default.
+// let"s return back our create method as the default.
 export default {
   create
 }
