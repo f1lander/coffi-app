@@ -5,10 +5,9 @@ import {
 	Text,
 	View,
 	TouchableOpacity
-} from "react-native";
-
-import { MonoText, AnnieText } from "../components/StyledText";
-import { WebBrowser, Constants, Facebook } from "expo";
+} from 'react-native';
+import { NunitoText } from '../components/StyledText';
+import { WebBrowser, Constants, Facebook } from 'expo';
 import { observer, inject } from "mobx-react";
 import { Toast } from "native-base";
 
@@ -113,9 +112,9 @@ class Login extends React.Component {
 		return (
 			<View style={theme.view}>
 				<View style={theme.dayView}>
-					<Image style={theme.dayImage} source={require("../assets/images/bg.jpg")}>
-						<Image source={require("../assets/images/logo-c2.png")} style={theme.dayImageIcon} />
-						<AnnieText style={theme.dayWelcome}>Bienvenido!</AnnieText>
+					<Image style={theme.dayImage} source={require('../assets/images/bg.jpg')}>
+						<Image source={require('../assets/images/logo-c2.png')} style={theme.dayImageIcon} />
+						<Text style={theme.welcomeTitle}>Bienvenido!</Text>
 						<TouchableOpacity onPress={this.onPressLoginWithFb.bind(this) } style={{ height: 46, marginTop: 14 }}>
 							<View style={theme.btnWrap}>
 								<Image source={require("../assets/images/facebook.png")} style={theme.btnImage} />
