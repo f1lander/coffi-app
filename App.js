@@ -65,12 +65,14 @@ export default class App extends React.Component {
 				]),
 				Font.loadAsync([
 					Ionicons.font,
+					{ 'Roboto': require('native-base/Fonts/Roboto.ttf') },
+					{ 'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf')},
 					{ 'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf') },
 					{ 'annie': require('./assets/fonts/Aniie.ttf') },
 					{ 'ticket': require('./assets/fonts/Ticketing.ttf') },
 					{ 'nunito-black': require('./assets/fonts/Nunito-Black.ttf') },
 					{ 'nunito-regular': require('./assets/fonts/Nunito-Regular.ttf') },
-					{ 'nunito-semibold': require('./assets/fonts/Nunito-Semibold.ttf') },
+					{ 'nunito-semibold': require('./assets/fonts/Nunito-SemiBold.ttf') },
 					{ 'nunito-light': require('./assets/fonts/Nunito-Light.ttf') },
 
 				]),
