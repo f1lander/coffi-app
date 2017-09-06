@@ -77,11 +77,12 @@ const styles = StyleSheet.create({
 		width: width - 20,
 		height: (width/2) - 20
 	},
-	dayWelcome: { 
+	welcomeTitle: { 
 		fontSize: 32, 
 		color: '#fff', 
 		backgroundColor: 'transparent', 
-		textAlign: 'center' 
+		textAlign: 'center',
+		fontFamily: 'nunito-black'
 	},
 
 	// PLATOS
