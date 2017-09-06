@@ -123,7 +123,7 @@ const create = (baseURL = BASE_URL) => {
     getCoffeeById,
     sendCoffeeReview,
     getPreparationsMethods,
-    searchCoffee
+    searchCoffee,
   }
 }
 

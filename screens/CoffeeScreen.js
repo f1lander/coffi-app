@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
-import { Container, Content, Card, CardItem, Left, Right, Body, Text, Icon, Button, Thumbnail } from 'native-base';
+import { Container, Content, Card, CardItem, Left, Right, Body, Text, Icon, Button, Thumbnail, Input, Item } from 'native-base';
 
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 
@@ -24,7 +24,11 @@ import { apiConnector }  from '../navigation/Connectors';
 
 import { observer, inject } from "mobx-react";
 
+import utils from '../api/utils'
+
 import moment from 'moment';
+
+import _ from 'lodash';
 
 const window = Dimensions.get('window');
 
@@ -44,6 +48,7 @@ class CoffeeScreen extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+        review: {},
         loadingCoffee: true,
         loadingReviews: true,
         loadingPeronalReviews: true,
@@ -52,6 +57,8 @@ class CoffeeScreen extends React.Component {
 
   componentDidMount(){
     const { params } = this.props.navigation.state;
+
+    this._loadPersonalReview();
 
     this.props.Api.getCoffeeById(params.id)
     .then(response => {
@@ -79,21 +86,24 @@ class CoffeeScreen extends React.Component {
       }
 
       this.setState({
-        loadingPeronalReviews: false
+        loadingReviews: false
       });
     });
 
     this.props.Api.getMyReviewsByCoffeeId(params.id)
     .then(response => {
       if(response.ok){
+        console.log(response.data);
         this.props.coffeeStore.updateCoffee(params.id, { personalReviews: response.data });
       }else{
         console.log('Error fetching personal reviews: ' + response.problem);
       }
 
       this.setState({
-        loadingPeronalReviews: false
+        loadingPersonalReviews: false
       });
+
+      this._loadPersonalReview();
     });
   }
 
@@ -114,10 +124,10 @@ class CoffeeScreen extends React.Component {
 
   _renderCard(data){
     return (
-      <Card>
+      <Card key={'review-' + data.id}>
         <CardItem>
           <Left>
-            <Thumbnail source={{ uri: data.avatarUrl }} />
+            <Thumbnail source={{ uri: utils.getAvatarUrl(data.userId) }} />
             <Body>
               <Text>{ data.user && data.user.username }</Text>
               <Text note>{ data.user && data.user.location }</Text>
@@ -125,14 +135,25 @@ class CoffeeScreen extends React.Component {
           </Left>
         </CardItem>
         <CardItem>
-          <View style={{ flex: 1 }}>
+          <Body>
             <Text>{ data.comment }</Text>
-          </View>
+          </Body>
         </CardItem>
+        {
+          data.method && (
+            <CardItem>
+              <Icon active name="flask" style={{opacity: 0.7}}/>
+              <Text>{ data.method && (data.method.name || data.method.description)}</Text>
+            </CardItem>
+          )
+        }
         <CardItem>
           <Left>
             {this._renderStar(data.rating)}
           </Left>
+          <Body>
+            { data.method && (data.method.name || data.method.description)}
+          </Body>
           <Right>
             <Text>{ data.updatedAt && moment(data.updatedAt).fromNow() }</Text>
           </Right>
@@ -141,9 +162,77 @@ class CoffeeScreen extends React.Component {
     )
   }
 
+  _getPersonalReview(methodId){
+    const { params } = this.props.navigation.state;
+    const data = this.props.coffeeStore.coffees[params.id];
+
+    const myReviews = (data && data.personalReviews) ? 
+      _.keyBy(data.personalReviews.map(myReview => {
+        return {...myReview, type: myReview.methodId || 'global' }
+      }), 'type'): {};
+
+    return myReviews[methodId || 'global'];
+  }
+
+  _loadPersonalReview(methodId){
+    const review = this._getPersonalReview(methodId) || {
+      comment: '',
+      rating: 0,
+      methodId
+    };
+
+    this.setState({review});
+  }
+
+  updateRaiting(rating){
+    let currrentReview = this.state.review || {};
+    this.setState({
+      review: {
+        ...currrentReview,
+        rating
+      }
+    });
+  }
+
+  updateComment(comment){
+    let currrentReview = this.state.review || {};
+    this.setState({
+      review: {
+        ...currrentReview,
+        comment
+      }
+    });
+  }
+
+  sendReview(){
+    const { params } = this.props.navigation.state;
+    const { review } = this.state;
+    this.setState({
+      sendingReview: true,
+    }, () => {
+      this.props.Api.sendCoffeeReview(params.id, {
+        rating: review.rating,
+        comment: review.comment
+      })
+      .then(response => {
+        if(response.ok){
+          console.log('Review has send!');
+        }else{
+          console.log('Error!');
+        }
+
+        this.setState({
+          review: response.data,
+          sendingReview: false
+        });
+      })
+    })
+  }
+
   render() {
     const { goBack } = this.props.navigation;
     const { params } = this.props.navigation.state;
+    const { review } = this.state;
     const data = this.props.coffeeStore.coffees[params.id];
 
     if(!data){
@@ -186,7 +275,7 @@ class CoffeeScreen extends React.Component {
                                 disabled={true}
                                 half={true}
                                 rating={data.avg_rating || 0}
-                                update={(val)=>{this.setState({stars: val})}}
+                                update={this.updateRaiting.bind(this)}
                                 spacing={4}
                                 starSize={15}
                                 tintColor={'white'}
@@ -226,22 +315,41 @@ class CoffeeScreen extends React.Component {
 
             <View style={{padding: 4}}>
                 <Card>
+                    {
+                      review ? (
+                        <CardItem key={'start-' + ((review && review.id) || 'empty')}>
+                          <View style={{flex: 1, alignItems: 'center', padding: 10, backgroundColor: '#eff0f2'}}>
+                              <Text style={{fontWeight: 'bold', paddingVertical: 10}}>{ review.id ? 'Update your review!': 'Give it a review!' } </Text>
+                              <Stars
+                                  half={true}
+                                  rating={(review && review.rating) || 0}
+                                  update={(val)=>{this.updateRaiting(val)}}
+                                  spacing={4}
+                                  starSize={40}
+                                  tintColor={'#d87504'}
+                                  count={5}/>
+                          </View>
+                        </CardItem>
+                      ): (
+                        <CardItem>
+                          <Text>Loading...</Text>
+                        </CardItem>
+                      )
+                    }
                     <CardItem>
-                        <View style={{flex: 1, alignItems: 'center', padding: 10, backgroundColor: '#eff0f2'}}>
-                            <Text style={{fontWeight: 'bold', paddingVertical: 10}}>Give it a review!</Text>
-                            <Stars
-                                half={true}
-                                rating={0}
-                                update={(val)=>{this.setState({stars: val})}}
-                                spacing={4}
-                                starSize={40}
-                                tintColor={'#d87504'}
-                                count={5}/>
-                        </View>
+                      <Item>
+                        <Input
+                          onChangeText={(val) => this.updateComment(val)}
+                          placeholder='Add Comment'
+                          value={this.state.review ? this.state.review.comment : ''}
+                          numberOfLines={(review && review.comment && review.comment.length) ? 3: 1} 
+                          multiline={true} 
+                        />
+                      </Item>
                     </CardItem>
                     <CardItem>
-                        <Button block light>
-                            <Text>Send Review</Text>
+                        <Button block light disabled={!review || this.state.sendingReview} onPress={this.sendReview.bind(this)}>
+                            <Text>{ this.state.sendingReview ? 'Sending...':  !(review && review.id) ? 'Send Review' : 'Update Review' }</Text>
                         </Button>
                     </CardItem>
                 </Card>
