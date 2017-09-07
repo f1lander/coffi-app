@@ -243,7 +243,7 @@ class CoffeeScreen extends React.Component {
       <View style={styles.container}>
         <View style={{ flex: 1, flexDirection: 'row' }}>
           <ParallaxScrollView
-          headerBackgroundColor="#333"
+            headerBackgroundColor="#333"
             stickyHeaderHeight={ STICKY_HEADER_HEIGHT }
             parallaxHeaderHeight={ PARALLAX_HEADER_HEIGHT }
             backgroundSpeed={10}
