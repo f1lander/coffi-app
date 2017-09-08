@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
-import { Container, Content, Card, CardItem, Left, Right, Body, Text, Icon, Button, Thumbnail, Input, Item } from 'native-base';
+import { Container, Content, Card, CardItem, Left, Right, Body, Text, Icon, Button, Thumbnail, Input, Item, Spinner } from 'native-base';
 
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 
@@ -56,7 +56,7 @@ class CoffeeScreen extends React.Component {
       review: {},
       loadingCoffee: true,
       loadingReviews: true,
-      loadingPeronalReviews: true,
+      loadingPersonalReviews: true,
     }
   }
 
@@ -81,6 +81,13 @@ class CoffeeScreen extends React.Component {
 
   loadData(params) {
     this._loadPersonalReview(params.id);
+
+    this.setState({
+      loadingCoffee: true,
+      loadingPersonalReviews: true,
+      loadingReviews: true,
+      loadingRelatedCoffess: true
+    });
 
     this.props.Api.getCoffeeById(params.id)
       .then(response => {
@@ -133,8 +140,6 @@ class CoffeeScreen extends React.Component {
               this.setState({
                 loadingRelatedCoffess: false
               });
-      
-              this._loadPersonalReview(params.id);
           });
         } else {
           console.log(response.problem);
@@ -272,6 +277,11 @@ class CoffeeScreen extends React.Component {
     const { review } = this.state;
     const data = this.props.coffeeStore.coffees[params.id];
 
+    const isLoading = (
+      this.state.loadingCoffee || this.state.loadingReviews || 
+      this.state.loadingPersonalReviews || this.state.loadingRelatedCoffess
+    );
+
     if (!data) {
       return <View></View>
     }
@@ -354,6 +364,17 @@ class CoffeeScreen extends React.Component {
             )}>
             <View style={{ padding: 4 }}>
               {
+                isLoading ? (
+                  <Card>
+                    <CardItem>
+                      <View style={{flex:1, alignItems:'center'}}>
+                        <Spinner color='#FFCD30' />
+                      </View>
+                    </CardItem>
+                  </Card>
+                ): null
+              }
+              {
                 /* <Card>
                 <CardItem header bordered>
                   <Text style={{color: '#FFCD30'}}>Variety</Text>
@@ -368,7 +389,7 @@ class CoffeeScreen extends React.Component {
                 </Card> */
               }
               {
-                data && data.related && data.related.varieties && data.related.varieties.length ? (
+                !isLoading && data && data.related && data.related.varieties && data.related.varieties.length ? (
                   <Card>
                     <CardItem>
                       <SmartPicker
