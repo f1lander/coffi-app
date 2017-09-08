@@ -96,6 +96,8 @@ const create = (baseURL = BASE_URL) => {
 
   const searchCoffee = (data) => api.post('/coffees/search/', data)
 
+  const getRelatedCoffees = (id) => api.get(`/coffees/${id}/related-coffees`)
+
   
   // ------
   // STEP 3
@@ -124,6 +126,7 @@ const create = (baseURL = BASE_URL) => {
     sendCoffeeReview,
     getPreparationsMethods,
     searchCoffee,
+    getRelatedCoffees
   }
 }
 
