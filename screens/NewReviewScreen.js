@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Image, View } from 'react-native';
 import { ImagePicker } from 'expo';
 
-import { apiConnector }  from '../navigation/Connectors';
+import { apiConnector } from '../navigation/Connectors';
 
 export class ScanCoffeeScreen extends React.Component {
   state = {
@@ -13,7 +13,7 @@ export class ScanCoffeeScreen extends React.Component {
     title: 'Add Review',
   };
 
-  componentDidMount(){
+  componentDidMount() {
     const { navigate } = this.props.navigation;
     //navigate('Coffee', { id: "59ae0b46ce8f3d00112af083"});
   }
@@ -42,8 +42,6 @@ export class ScanCoffeeScreen extends React.Component {
       base64: true,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       this.setState({ image: result.uri });
     }
@@ -52,13 +50,13 @@ export class ScanCoffeeScreen extends React.Component {
       this.props.Api.searchCoffee({
         image: result.base64
       }).then(response => {
-        if(response.ok){
-          if(response.data && response.data.id){
-            navigate('Coffee', { id: response.data.id});
-          }else{
-            window.alert('Not found');
+        if (response.ok) {
+          if (response.data && response.data.id) {
+            navigate('Coffee', { id: response.data.id });
+          } else {
+            navigate("CoffeeRequest", { uri: result.uri, base64: result.base64 });
           }
-        }else{
+        } else {
           window.alert("Error");
         }
       });

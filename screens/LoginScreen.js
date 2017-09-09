@@ -44,15 +44,12 @@ class Login extends React.Component {
 				"113119379370031", { permissions: ["public_profile", "email", "user_location"] }
 			);
 			
-			console.log(token);
 			switch (type) {
 				case "success": {
 					const fbResponse = await fetch(`https://graph.facebook.com/me?fields=name,email,picture&access_token=${token}`);
 					const profile = await fbResponse.json();
 
 					const response = await this.props.Api.loginWithFacebook(token);
-
-					console.log(`This is the response ${JSON.stringify(response)}`);
 					if(response.ok){
 						const {access_token, userId} = response.data;
 						this.props.authenticationStore.login(access_token, userId);

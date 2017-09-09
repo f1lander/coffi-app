@@ -5,6 +5,10 @@ import { MonoText, AnnieText } from "../components/StyledText";
 
 import { apiConnector } from "../navigation/Connectors";
 
+import moment from "moment";
+
+import ApiUtils from "../api/utils";
+
 import {
 	Toast,
 	Form,
@@ -42,21 +46,22 @@ const emptyStar = require("../assets/images/starEmpty.png");
 
 const ReviewItem = ({ review }) => {
 	return (
-		<ListItem>
+		<ListItem key={review.id}>
 			<Card>
 				<CardItem style={{ flexDirection: "row", flex: 1 }}>
 					<Image style={[theme.avatarImage, { width: 70, height: 70 }]} source={require("../assets/images/avatar.png")} />
 					<View>
-						<Text>{review.brand}</Text>
-						<Text>{review.method}</Text>
+						<Text></Text>
+						<Text>Method</Text>
 					</View>
 				</CardItem>
-				{/* <CardItem style={{ flexDirection: "row", flex: 1, alignItems: "flex-end", justifyContent: "space-between", }}> */}
+
 				<CardItem footer style={{ flex: 1 }}>
-					<Text style={{ flex: 1 }}>Today</Text>
+					<Text style={{ flex: 1 }}>{moment(review.updatedAt).fromNow()}</Text>
 					<Stars
 						style={{ alignSelf: "flex-end" }}
 						half={true}
+						disabled={true}
 						value={review.score}
 						spacing={4}
 						starSize={20}
@@ -77,17 +82,12 @@ class ProfileScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			avatar: "",
-			user: {
-				reviews: [],
-			}
+			followers: [],
+			following: [],
+			avatar: ApiUtils.getAvatarUrl("me"),
+			reviews: [],
+			userProfile: {}
 		};
-
-		AsyncStorage.getItem("@Coffii:userId")
-			.then(userId => {
-				console.log(`http://192.168.0.12:3000/api/users/${userId}/avatar?s=medium`);
-				this.setState({ avatar: `http://192.168.0.12:3000/api/users/${userId}/avatar?s=medium`, user: this.state.user })
-			});
 	}
 
 	static navigationOptions = {
@@ -98,13 +98,46 @@ class ProfileScreen extends React.Component {
 	}
 
 	componentDidMount() {
-		this.props.Api.getProfile()
-			.then((user) => {
-				this.setState({ user, avatar: this.state.avatar });
+		this.props.Api.getProfile("me")
+			.then((response) => {
+				const userProfile = response.data;
+				const state = this.state || {};
+				state.userProfile = userProfile;
+				this.setState(state);
 			})
 			.catch((err) => {
-				// console.error(err);
+				console.error(err);
 			});
+
+		this.props.Api.getFollowersForUser("me")
+			.then((response) => {
+				const followers = response.data;
+				const state = this.state || {};
+				state.followers = followers;
+				this.setState(state);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+
+		this.props.Api.getFollowingForUser("me")
+			.then((response) => {
+				const following = response.data;
+				const state = this.state || {};
+				state.following = following;
+				this.setState(state);
+			})
+			.catch((err) => { });
+
+		this.props.Api.getReviewsForUser("me")
+			.then((response) => {
+				const reviews = response.data;
+				console.log(JSON.stringify(reviews));
+				const state = this.state || {};
+				state.reviews = reviews;
+				this.setState(state);
+			})
+			.catch((err) => { });
 	}
 
 	handleValueChange(isValid, values, validationResults, postSubmit = null, modalNavigator = null) {
@@ -141,7 +174,7 @@ class ProfileScreen extends React.Component {
 					<Row style={{ alignItems: "center" }} size={1}>
 						<Image style={theme.avatarImage} source={this.state.avatar ? { uri: this.state.avatar } : require("../assets/images/avatar.png")} />
 						<View style={{ flexDirection: "column", justifyContent: "flex-start", alignItems: "center" }}>
-							<Text style={[theme.platoCoinText]}>{this.state.user.fullname}</Text>
+							<Text style={[theme.platoCoinText]}>{this.state.userProfile.fullname}</Text>
 							<Text style={[theme.platoCoinText, { fontSize: 12, fontStyle: "normal" }]}>SPS, Honduras</Text>
 						</View>
 						<LogOut />
@@ -149,11 +182,11 @@ class ProfileScreen extends React.Component {
 
 					<Row style={{ height: 50 }}>
 						<Col style={styles.container}>
-							<Text style={styles.text}>10</Text>
+							<Text style={styles.text}>{this.state.followers.length}</Text>
 							<Text style={styles.subText}>Followers</Text>
 						</Col>
 						<Col style={styles.container}>
-							<Text style={styles.text}>5</Text>
+							<Text style={styles.text}>{this.state.following.length}</Text>
 							<Text style={styles.subText}>Following</Text>
 						</Col>
 						<Col style={styles.container}>
@@ -163,7 +196,7 @@ class ProfileScreen extends React.Component {
 					</Row>
 					<Row size={2}>
 						<List
-							dataArray={this.state.user.reviews}
+							dataArray={this.state.reviews}
 							style={{ flex: 1 }}
 							renderRow={(review) => <ReviewItem review={review} />}>
 							<ListItem itemHeader first>

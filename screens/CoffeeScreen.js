@@ -46,7 +46,7 @@ class CoffeeScreen extends React.Component {
     title: "Coffee Detail",
     header: null
   };
-
+  
   constructor(props){
     super(props);
     this.state = {
@@ -59,7 +59,6 @@ class CoffeeScreen extends React.Component {
 
   componentDidMount(){
     const { params } = this.props.navigation.state;
-
     this._loadPersonalReview();
 
     this.props.Api.getCoffeeById(params.id)

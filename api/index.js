@@ -1,10 +1,8 @@
 import { AsyncStorage } from "react-native"
 
-// const BASE_URL = "https://cofi-api.herokuapp.com/api";
-const BASE_URL = "http://192.168.0.12:3000/api";
+const BASE_URL = "https://cofi-api.herokuapp.com/api";
 
-// const AUTH_FACEBOOK_CALLBACK_URL = "https://cofi-api.herokuapp.com/auth/facebook/callback";
-const AUTH_FACEBOOK_CALLBACK_URL = "http://192.168.0.12:3000/auth/facebook/callback";
+const AUTH_FACEBOOK_CALLBACK_URL = "https://cofi-api.herokuapp.com/auth/facebook/callback";
 
 // a library to wrap and simplify api calls
 import apisauce from "apisauce"
@@ -43,6 +41,7 @@ const create = (baseURL = BASE_URL) => {
 
   api.addAsyncRequestTransform(request => async () => {
     const accessToken = await AsyncStorage.getItem("@Coffii:token")
+    console.log(`This is the token => ${accessToken}`);
     if (accessToken) {
       request.headers["Authorization"] = accessToken;
     }
@@ -72,6 +71,8 @@ const create = (baseURL = BASE_URL) => {
   // Since we can"t hide from that, we embrace it by getting out of the
   // way at this level.
   //
+
+  const submitCoffeeRequest = (data) => api.post(`/CoffeeRequests`, data);
 
   const getProfile = (userId) => api.get(`/users/${userId}`);
 
@@ -140,7 +141,8 @@ const create = (baseURL = BASE_URL) => {
     getProfile,
     getFollowersForUser,
     getFollowingForUser,
-    getReviewsForUser
+    getReviewsForUser,
+    submitCoffeeRequest,
   }
 }
 
