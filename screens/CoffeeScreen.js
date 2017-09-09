@@ -7,12 +7,15 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
+  Picker
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
-import { Container, Content, Card, CardItem, Left, Right, Body, Text, Icon, Button, Thumbnail, Input, Item } from 'native-base';
+import { Container, Content, Card, CardItem, Left, Right, Body, Text, Icon, Button, Thumbnail, Input, Item, Spinner } from 'native-base';
 
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
+
+import SmartPicker from 'react-native-smart-picker';
 
 import { MonoText } from '../components/StyledText';
 
@@ -22,7 +25,7 @@ import Stars from 'react-native-stars';
 
 import StarsAssets from '../assets/images/stars';
 
-import { apiConnector }  from '../navigation/Connectors';
+import { apiConnector } from '../navigation/Connectors';
 
 import { observer, inject } from "mobx-react";
 
@@ -46,66 +49,106 @@ class CoffeeScreen extends React.Component {
     title: "Coffee Detail",
     header: null
   };
-  
-  constructor(props){
+
+  constructor(props) {
     super(props);
     this.state = {
-        review: {},
-        loadingCoffee: true,
-        loadingReviews: true,
-        loadingPeronalReviews: true,
+      review: {},
+      loadingCoffee: true,
+      loadingReviews: true,
+      loadingPersonalReviews: true,
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const { params } = this.props.navigation.state;
-    this._loadPersonalReview();
+    this.loadData(params);
+  }
+
+  componentWillReceiveProps(newProps){
+    const { params } = this.props.navigation.state;
+    const newParams = newProps.navigation.state.params;
+
+    if(params.id !== newParams.id){
+      this.loadData(newParams);
+    }
+  }
+
+  setCoffe(id){
+    const {setParams} = this.props.navigation;
+    setParams({id});
+  }
+
+  loadData(params) {
+    this._loadPersonalReview(params.id);
+
+    this.setState({
+      loadingCoffee: true,
+      loadingPersonalReviews: true,
+      loadingReviews: true,
+      loadingRelatedCoffess: true
+    });
 
     this.props.Api.getCoffeeById(params.id)
-    .then(response => {
-      if(response.ok){
-        if(this.props.coffeeStore.coffees[params.id]){
-          this.props.coffeeStore.updateCoffee(params.id, response.data);
-        }else{
-          this.props.coffeeStore.addCoffee(response.data);
+      .then(response => {
+        if (response.ok) {
+          if (this.props.coffeeStore.coffees[params.id]) {
+            this.props.coffeeStore.updateCoffee(params.id, response.data);
+          } else {
+            this.props.coffeeStore.addCoffee(response.data);
+          }
+          this.props.Api.getReviewsByCoffeeId(params.id)
+          .then(response => {
+            if (response.ok) {
+              this.props.coffeeStore.updateCoffee(params.id, { reviews: response.data });
+            } else {
+              console.log('Error fetching personal reviews: ' + response.problem);
+            }
+    
+            this.setState({
+              loadingReviews: false
+            });
+          });
+    
+          this.props.Api.getMyReviewsByCoffeeId(params.id)
+            .then(response => {
+              if (response.ok) {
+                console.log(response.data);
+                this.props.coffeeStore.updateCoffee(params.id, { personalReviews: response.data });
+              } else {
+                console.log('Error fetching personal reviews: ' + response.problem);
+              }
+      
+              this.setState({
+                loadingPersonalReviews: false
+              });
+      
+              this._loadPersonalReview(params.id);
+            });
+      
+          this.props.Api.getRelatedCoffees(params.id)
+            .then(response => {
+              if (response.ok) {
+                this.props.coffeeStore.updateCoffee(params.id, { related: response.data });
+                response.data.varieties.map(coffee => {
+                  this.props.coffeeStore.updateCoffee(coffee.id, {...coffee});
+                });
+              } else {
+                console.log('Error fetching personal reviews: ' + response.problem);
+              }
+      
+              this.setState({
+                loadingRelatedCoffess: false
+              });
+          });
+        } else {
+          console.log(response.problem);
         }
-      }else{
-        console.log(response.problem);
-      }
 
-      this.setState({
-        loadingCoffee: false
+        this.setState({
+          loadingCoffee: false
+        });
       });
-    });
-
-    this.props.Api.getReviewsByCoffeeId(params.id)
-    .then(response => {
-      if(response.ok){
-        this.props.coffeeStore.updateCoffee(params.id, { reviews: response.data });
-      }else{
-        console.log('Error fetching personal reviews: ' + response.problem);
-      }
-
-      this.setState({
-        loadingReviews: false
-      });
-    });
-
-    this.props.Api.getMyReviewsByCoffeeId(params.id)
-    .then(response => {
-      if(response.ok){
-        console.log(response.data);
-        this.props.coffeeStore.updateCoffee(params.id, { personalReviews: response.data });
-      }else{
-        console.log('Error fetching personal reviews: ' + response.problem);
-      }
-
-      this.setState({
-        loadingPersonalReviews: false
-      });
-
-      this._loadPersonalReview();
-    });
   }
 
   _renderStar = (rating) => {
@@ -122,69 +165,68 @@ class CoffeeScreen extends React.Component {
     )
   }
 
-  _renderCard(data){
+  _renderCard(data) {
     return (
       <Card key={'review-' + data.id}>
         <CardItem>
           <Left>
             <Thumbnail source={{ uri: utils.getAvatarUrl(data.userId) }} />
             <Body>
-              <Text>{ data.user && data.user.username }</Text>
-              <Text note>{ data.user && data.user.location }</Text>
+              <Text>{data.user && data.user.username}</Text>
+              <Text note>{data.user && data.user.location}</Text>
             </Body>
           </Left>
         </CardItem>
         <CardItem>
           <Body>
-            <Text>{ data.comment }</Text>
+            <Text>{data.comment}</Text>
           </Body>
         </CardItem>
         {
           data.method && (
             <CardItem>
-              <Icon active name="flask" style={{opacity: 0.7}}/>
-              <Text>{ data.method && (data.method.name || data.method.description)}</Text>
+              <Icon active name="flask" style={{ opacity: 0.7 }} />
+              <Text>{data.method && (data.method.name || data.method.description)}</Text>
             </CardItem>
           )
         }
         <CardItem>
-          <Left>
+          <Left key={"rate-" + data.rating.toString()} >
             {this._renderStar(data.rating)}
           </Left>
           <Body>
-            { data.method && (data.method.name || data.method.description)}
+            {data.method && (data.method.name || data.method.description)}
           </Body>
           <Right>
-            <Text>{ data.updatedAt && moment(data.updatedAt).fromNow() }</Text>
+            <Text>{data.updatedAt && moment(data.updatedAt).fromNow()}</Text>
           </Right>
         </CardItem>
       </Card>
     )
   }
 
-  _getPersonalReview(methodId){
-    const { params } = this.props.navigation.state;
-    const data = this.props.coffeeStore.coffees[params.id];
+  _getPersonalReview(coffeeId, methodId) {
+    const data = this.props.coffeeStore.coffees[coffeeId];
 
-    const myReviews = (data && data.personalReviews) ? 
+    const myReviews = (data && data.personalReviews) ?
       _.keyBy(data.personalReviews.map(myReview => {
-        return {...myReview, type: myReview.methodId || 'global' }
-      }), 'type'): {};
+        return { ...myReview, type: myReview.methodId || 'global' }
+      }), 'type') : {};
 
     return myReviews[methodId || 'global'];
   }
 
-  _loadPersonalReview(methodId){
-    const review = this._getPersonalReview(methodId) || {
+  _loadPersonalReview(coffeId, methodId) {
+    const review = this._getPersonalReview(coffeId, methodId) || {
       comment: '',
       rating: 0,
       methodId
     };
 
-    this.setState({review});
+    this.setState({ review });
   }
 
-  updateRaiting(rating){
+  updateRaiting(rating) {
     let currrentReview = this.state.review || {};
     this.setState({
       review: {
@@ -194,7 +236,7 @@ class CoffeeScreen extends React.Component {
     });
   }
 
-  updateComment(comment){
+  updateComment(comment) {
     let currrentReview = this.state.review || {};
     this.setState({
       review: {
@@ -204,7 +246,7 @@ class CoffeeScreen extends React.Component {
     });
   }
 
-  sendReview(){
+  sendReview() {
     const { params } = this.props.navigation.state;
     const { review } = this.state;
     this.setState({
@@ -214,18 +256,18 @@ class CoffeeScreen extends React.Component {
         rating: review.rating,
         comment: review.comment
       })
-      .then(response => {
-        if(response.ok){
-          console.log('Review has send!');
-        }else{
-          console.log('Error!');
-        }
+        .then(response => {
+          if (response.ok) {
+            console.log('Review has send!');
+          } else {
+            console.log('Error!');
+          }
 
-        this.setState({
-          review: response.data,
-          sendingReview: false
-        });
-      })
+          this.setState({
+            review: response.data,
+            sendingReview: false
+          });
+        })
     })
   }
 
@@ -235,138 +277,191 @@ class CoffeeScreen extends React.Component {
     const { review } = this.state;
     const data = this.props.coffeeStore.coffees[params.id];
 
-    if(!data){
+    const isLoading = (
+      this.state.loadingCoffee || this.state.loadingReviews || 
+      this.state.loadingPersonalReviews || this.state.loadingRelatedCoffess
+    );
+
+    if (!data) {
       return <View></View>
     }
     return (
       <View style={styles.container}>
         <View style={{ flex: 1, flexDirection: 'row' }}>
           <ParallaxScrollView
-          headerBackgroundColor="#333"
-            stickyHeaderHeight={ STICKY_HEADER_HEIGHT }
-            parallaxHeaderHeight={ PARALLAX_HEADER_HEIGHT }
+            headerBackgroundColor="#333"
+            stickyHeaderHeight={STICKY_HEADER_HEIGHT}
+            parallaxHeaderHeight={PARALLAX_HEADER_HEIGHT}
             backgroundSpeed={10}
             renderBackground={() => (
               <View key="background">
-                <Image source={{uri: 'http://www.juanvaldezcafe.com/sites/default/files/cumbre_descafeinado.jpg',
-                                width: window.width,
-                                height: PARALLAX_HEADER_HEIGHT}}/>
-                <View style={{position: 'absolute',
-                              top: 0,
-                              width: window.width,
-                              backgroundColor: 'rgba(0,0,0,.4)',
-                              height: PARALLAX_HEADER_HEIGHT}}/>
+                <Image style={{ width: window.width, height: PARALLAX_HEADER_HEIGHT }}
+                  source={require('../assets/images/bg.jpg')} />
+                <View style={{
+                  position: 'absolute',
+                  top: 0,
+                  width: window.width,
+                  backgroundColor: 'rgba(0,0,0,.4)',
+                  height: PARALLAX_HEADER_HEIGHT
+                }} />
               </View>
             )}
             renderForeground={() => (
-              <View key="parallax-header" style={ styles.parallaxHeader }>
-                <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                    <View style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
-                        <Image style={ styles.avatar } source={{
-                            uri: 'http://www.juanvaldezcafe.com/sites/default/files/cumbre_descafeinado.jpg',
-                            width: AVATAR_SIZE,
-                            height: AVATAR_SIZE
-                        }}/>
+              <View key={"parallax-header-"+data.id} style={styles.parallaxHeader}>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                  <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
+                    <Image style={styles.avatar} source={{
+                      uri: utils.getCoffeeImageUrl(data.id),
+                      width: AVATAR_SIZE,
+                      height: AVATAR_SIZE
+                    }} />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.reviewValue}>{data.avg_rating ? data.avg_rating.toFixed(1) : '-'}</Text>
+                    <View key={"rate-" + data.rating.toString()} style={{ flex: 1, flexWrap: 'wrap' }}>
+                      <Stars
+                        disabled={true}
+                        half={true}
+                        rating={data.avg_rating || 0}
+                        update={this.updateRaiting.bind(this)}
+                        spacing={4}
+                        starSize={15}
+                        tintColor={'white'}
+                        count={5}
+                        {...StarsAssets.smallCoffeeBeans}
+                      />
                     </View>
-                    <View style={{flex: 1}}>
-                        <Text style={styles.reviewValue}>{ data.avg_rating ? data.avg_rating.toFixed(1) : '-' }</Text>
-                        <View style={{flex: 1, flexWrap: 'wrap'}}>
-                            <Stars
-                                disabled={true}
-                                half={true}
-                                rating={data.avg_rating || 0}
-                                update={this.updateRaiting.bind(this)}
-                                spacing={4}
-                                starSize={15}
-                                tintColor={'white'}
-                                count={5}
-                                {...StarsAssets.smallCoffeeBeans}
-                              />
-                        </View>
-                    </View>
+                  </View>
                 </View>
-                <View style={{flex: 1, flexDirection: 'row', paddingHorizontal: 30}}>
-                    <View style={{flex: 1, flexDirection: 'column'}}>
-                        <Text style={ styles.sectionCoffeeText }>
-                            { data.brand &&  data.brand.name }
-                        </Text>
-                        <Text style={ styles.sectionCoffeeText }>
-                            { ((data.model || 'Original')  + ', ' + (data.variety &&  (data.variety.name || data.variety.description))) }
-                        </Text>
-                        <Text style={ styles.sectionTitleText }>
-                           { data.brand && data.brand.country}
-                        </Text>
-                    </View>
+                <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: 30 }}>
+                  <View style={{ flex: 1, flexDirection: 'column' }}>
+                    <Text style={styles.sectionCoffeeText}>
+                      {data.brand && data.brand.name}
+                    </Text>
+                    <Text style={styles.sectionCoffeeText}>
+                      {((data.model || 'Original') + ', ' + (data.variety && (data.variety.name || data.variety.description)))}
+                    </Text>
+                    <Text style={styles.sectionTitleText}>
+                      {data.brand && data.brand.country}
+                    </Text>
+                  </View>
                 </View>
               </View>
             )}
 
             renderStickyHeader={() => (
               <View key="sticky-header" style={styles.stickySection}>
-                <Text style={styles.stickySectionText}>{ data.brand &&  data.brand.name } Coffee</Text>
+                <Text style={styles.stickySectionText}>{data.brand && data.brand.name} Coffee</Text>
               </View>
             )}
 
             renderFixedHeader={() => (
               <View key="fixed-header" style={styles.fixedSection}>
-                <TouchableOpacity onPress={() => goBack()} style={{flexWrap: 'wrap'}}>
-                    <Icon ios='ios-arrow-round-back' android="md-arrow-back" style={styles.fixedSectionIcon}/>
+                <TouchableOpacity onPress={() => goBack()} style={{ flexWrap: 'wrap' }}>
+                  <Icon ios='ios-arrow-round-back' android="md-arrow-back" style={styles.fixedSectionIcon} />
                 </TouchableOpacity>
               </View>
             )}>
-
-            <View style={{padding: 4}}>
-                <Card>
-                    {
-                      review ? (
-                        <CardItem key={'start-' + ((review && review.id) || 'empty')}>
-                          <View style={{flex: 1, alignItems: 'center', padding: 10, backgroundColor: '#eff0f2'}}>
-                              <Text style={{fontWeight: 'bold', paddingVertical: 10}}>{ review.id ? 'Update your review!': 'Give it a review!' } </Text>
-                              <Stars
-                                  half={true}
-                                  rating={(review && review.rating) || 0}
-                                  update={(val)=>{this.updateRaiting(val)}}
-                                  spacing={4}
-                                  starSize={40}
-                                  tintColor={'#FFCD30'}
-                                  count={5}
-                                  {...StarsAssets.largeCoffeeBeans}
-                                  />
-                          </View>
-                        </CardItem>
-                      ): (
-                        <CardItem>
-                          <Text>Loading...</Text>
-                        </CardItem>
-                      )
-                    }
+            <View style={{ padding: 4 }}>
+              {
+                isLoading ? (
+                  <Card>
                     <CardItem>
-                      <Item>
-                        <Input
-                          onChangeText={(val) => this.updateComment(val)}
-                          placeholder='Add Comment'
-                          value={this.state.review ? this.state.review.comment : ''}
-                          numberOfLines={(review && review.comment && review.comment.length) ? 3: 1} 
-                          multiline={true} 
-                        />
-                      </Item>
+                      <View style={{flex:1, alignItems:'center'}}>
+                        <Spinner color='#FFCD30' />
+                      </View>
                     </CardItem>
+                  </Card>
+                ): null
+              }
+              {
+                /* <Card>
+                <CardItem header bordered>
+                  <Text style={{color: '#FFCD30'}}>Variety</Text>
+                </CardItem>
+                <CardItem button onPress={() => {}}>
+                  <Icon inactive name="md-pricetags" />
+                  <Text>Catuai</Text>
+                  <Right>
+                    <Icon name="arrow-forward" />
+                  </Right>
+                </CardItem>
+                </Card> */
+              }
+              {
+                !isLoading && data && data.related && data.related.varieties && data.related.varieties.length ? (
+                  <Card>
                     <CardItem>
-                        <Button block light disabled={!review || this.state.sendingReview} onPress={this.sendReview.bind(this)}>
-                            <Text>{ this.state.sendingReview ? 'Sending...':  !(review && review.id) ? 'Send Review' : 'Update Review' }</Text>
-                        </Button>
+                      <SmartPicker
+                        selectedValue={data.id}
+                        label='Select variant'
+                        androidBoxStyle={{ paddingHorizontal: 20, paddingVertical: 5 }}
+                        iosBoxStyle={{ padding: 4 }}
+                        onValueChange={(id) => { this.setCoffe(id) }}>
+                        <Picker.Item key={data.id} label={(data.variety && data.variety.description) || data.varietyId} value={data.id} />
+                        {
+                          data.related.varieties.map(x => {
+                            return (
+                              <Picker.Item key={x.id} label={(x.variety && x.variety.description) || x.varietyId} value={x.id} />
+                            )
+                          })
+                        }
+                      </SmartPicker>
                     </CardItem>
-                </Card>
-                <Card>
-                    <CardItem header>
-                        <Text>Reviews</Text>
-                    </CardItem>
-                </Card>
+                  </Card>
+                ) : null
+              }
+              <Card>
                 {
-                    data.reviews.map(x => {
-                        return this._renderCard(x);
-                    })
+                  review ? (
+                    <CardItem key={'start-' + ((review && review.id) || 'empty')}>
+                      <View style={{ flex: 1, alignItems: 'center', padding: 10, backgroundColor: '#eff0f2' }}>
+                        <Text style={{ fontWeight: 'bold', paddingVertical: 10 }}>{review.id ? 'Update your review!' : 'Give it a review!'} </Text>
+                        <Stars
+                          half={true}
+                          rating={(review && review.rating) || 0}
+                          update={(val) => { this.updateRaiting(val) }}
+                          spacing={4}
+                          starSize={40}
+                          tintColor={'#FFCD30'}
+                          count={5}
+                          {...StarsAssets.largeCoffeeBeans}
+                        />
+                      </View>
+                    </CardItem>
+                  ) : (
+                      <CardItem>
+                        <Text>Loading...</Text>
+                      </CardItem>
+                    )
                 }
+                <CardItem>
+                  <Item>
+                    <Input
+                      onChangeText={(val) => this.updateComment(val)}
+                      placeholder='Add Comment'
+                      value={this.state.review ? this.state.review.comment : ''}
+                      numberOfLines={(review && review.comment && review.comment.length) ? 3 : 1}
+                      multiline={true}
+                    />
+                  </Item>
+                </CardItem>
+                <CardItem>
+                  <Button block light disabled={!review || this.state.sendingReview} onPress={this.sendReview.bind(this)}>
+                    <Text>{this.state.sendingReview ? 'Sending...' : !(review && review.id) ? 'Send Review' : 'Update Review'}</Text>
+                  </Button>
+                </CardItem>
+              </Card>
+              <Card>
+                <CardItem header>
+                  <Text>Reviews</Text>
+                </CardItem>
+              </Card>
+              {
+                data.reviews.map(x => {
+                  return this._renderCard(x);
+                })
+              }
             </View>
           </ParallaxScrollView>
         </View>

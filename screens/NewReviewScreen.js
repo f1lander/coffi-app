@@ -4,6 +4,8 @@ import { ImagePicker } from 'expo';
 
 import { apiConnector } from '../navigation/Connectors';
 
+import { Spinner } from 'native-base';
+
 export class ScanCoffeeScreen extends React.Component {
   state = {
     image: null,
@@ -24,12 +26,21 @@ export class ScanCoffeeScreen extends React.Component {
 
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Button
-          title="Scan a Coffee"
-          onPress={this._pickImage}
-        />
         {image &&
-          <Image source={{ uri: image }} style={{ top: 10, width: 200, height: 200 }} />}
+        <Image source={{ uri: image }} style={{ top: 10, width: 200, height: 200 }} />}
+        {
+          !this.state.loading ? (
+            <Button
+              title="Scan a Coffee"
+              onPress={this._pickImage}
+            />
+          ): (
+            <View style={{flex:1, alignItems:'center'}}>
+              <Spinner color='#FFCD30' />
+            </View>
+          )
+        }
+
       </View>
     );
   }
