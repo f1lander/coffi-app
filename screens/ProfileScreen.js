@@ -7,6 +7,8 @@ import { apiConnector } from "../navigation/Connectors";
 
 import moment from "moment";
 
+import StarsAssets from '../assets/images/stars';
+
 import ApiUtils from "../api/utils";
 
 import {
@@ -24,8 +26,6 @@ import {
 	Card,
 	CardItem
 } from "native-base";
-
-import Stars from "react-native-stars";
 
 import {
 	Grid,
@@ -51,8 +51,8 @@ const ReviewItem = ({ review }) => {
 				<CardItem style={{ flexDirection: "row", flex: 1 }}>
 					<Image style={[theme.avatarImage, { width: 70, height: 70 }]} source={require("../assets/images/avatar.png")} />
 					<View>
-						<Text></Text>
-						<Text>Method</Text>
+						<Text>{review.coffee.brand.name}</Text>
+						<Text>{review.method ? review.method.name : ""}</Text>
 					</View>
 				</CardItem>
 
@@ -84,7 +84,7 @@ class ProfileScreen extends React.Component {
 		this.state = {
 			followers: [],
 			following: [],
-			avatar: ApiUtils.getAvatarUrl("me"),
+			avatar: ApiUtils.getAvatarUrl("me", "m"),
 			reviews: [],
 			userProfile: {}
 		};
@@ -167,7 +167,7 @@ class ProfileScreen extends React.Component {
 	}
 
 	render() {
-
+		console.log(this.state.avatar);
 		return (
 			<Container style={{ backgroundColor: "white" }}>
 				<Grid>
@@ -177,6 +177,9 @@ class ProfileScreen extends React.Component {
 							<Text style={[theme.platoCoinText]}>{this.state.userProfile.fullname}</Text>
 							<Text style={[theme.platoCoinText, { fontSize: 12, fontStyle: "normal" }]}>SPS, Honduras</Text>
 						</View>
+					</Row>
+
+					<Row style={{ paddingHorizontal: 5, height: 70 }}>
 						<LogOut />
 					</Row>
 
