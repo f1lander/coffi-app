@@ -65,21 +65,21 @@ export default class NewsScreen extends React.Component {
     )
   }
 
-  _renderCard(data){
+  _renderCard(data) {
     return (
-      <Card>
+      <Card key={data.id}>
         <CardItem>
           <Left>
             <Thumbnail source={{ uri: data.avatarUrl }} />
             <Body>
-              <Text>{ data.username }</Text>
-              <Text note>{ data.location }</Text>
+              <Text>{data.username}</Text>
+              <Text note>{data.location}</Text>
             </Body>
           </Left>
         </CardItem>
         <CardItem>
           <View style={{ flex: 1 }}>
-            <Text>{ data.comment }</Text>
+            <Text>{data.comment}</Text>
           </View>
         </CardItem>
         <CardItem cardBody>
@@ -90,10 +90,10 @@ export default class NewsScreen extends React.Component {
             {this._renderStar(data.rate)}
           </Left>
           <Body>
-            <Text>{ data.coffeName }</Text>
+            <Text>{data.coffeName}</Text>
           </Body>
           <Right>
-            <Text>{ data.timeAgo }</Text>
+            <Text>{data.timeAgo}</Text>
           </Right>
         </CardItem>
       </Card>
@@ -113,7 +113,7 @@ export default class NewsScreen extends React.Component {
               })
             }
           </Content>
-        </ScrollView>      
+        </ScrollView>
       </View>
     );
   }

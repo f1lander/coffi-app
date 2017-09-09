@@ -5,6 +5,9 @@ const defaultData = {
 	rating: 0,
 	reviews: [],
 	personalReviews: [],
+	related: {
+		varieties: []
+	}
 }
 
 export default class CoffeeStore {

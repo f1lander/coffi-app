@@ -2,7 +2,6 @@ import React from 'react';
 
 import Api from '../api';
 
-
 export function apiConnector(WrappedComponent) {
     return class extends React.Component {
         static navigationOptions = WrappedComponent.navigationOptions || {};

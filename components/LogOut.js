@@ -5,11 +5,11 @@ import theme from '../constants/Theme';
 
 @inject("authenticationStore")
 export default class LogOut extends React.Component {
-	render (){
+	render() {
 		return (
-			<TouchableOpacity onPress={() => this.props.authenticationStore.logout()} style={{marginTop:10}}>
-				<View style={theme.btnWrap}>
-					<Image source={require('../assets/images/off.png')} style={theme.btnImage}/>
+			<TouchableOpacity onPress={() => this.props.authenticationStore.logout()} style={{ flex: 1, height: 50 }}>
+				<View style={[theme.btnWrap, { flex: 1 }]}>
+					<Image source={require('../assets/images/off.png')} style={theme.btnImage} />
 					<Text style={theme.btnText}>CERRAR SESION</Text>
 				</View>
 			</TouchableOpacity>

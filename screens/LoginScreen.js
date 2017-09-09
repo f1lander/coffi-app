@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
 	Alert,
 	Image,
@@ -13,13 +13,13 @@ import { Toast } from "native-base";
 
 import {
 	StackNavigator,
-} from 'react-navigation';
+} from "react-navigation";
 
 
-import { apiConnector }  from '../navigation/Connectors';
+import { apiConnector }  from "../navigation/Connectors";
 
-import AppIntro from 'react-native-app-intro';
-import theme from '../constants/Theme';
+import AppIntro from "react-native-app-intro";
+import theme from "../constants/Theme";
 
 @inject("authenticationStore")
 class LoginScreen extends React.Component {
@@ -41,65 +41,65 @@ class Login extends React.Component {
 	async onPressLoginWithFb() {
 		try {
 			const { type, token, expires } = await Facebook.logInWithReadPermissionsAsync(
-				'113119379370031', { permissions: ['public_profile', 'email'] }
+				"113119379370031", { permissions: ["public_profile", "email", "user_location"] }
 			);
-
+			
 			switch (type) {
-				case 'success': {
+				case "success": {
 					const fbResponse = await fetch(`https://graph.facebook.com/me?fields=name,email,picture&access_token=${token}`);
 					const profile = await fbResponse.json();
-					const response = await this.props.Api.loginWithFacebook(token);
 
+					const response = await this.props.Api.loginWithFacebook(token);
 					if(response.ok){
-						this.props.authenticationStore.login(response.data['access_token']);
+						const {access_token, userId} = response.data;
+						this.props.authenticationStore.login(access_token, userId);
 						
 						Alert.alert(
-							'Logged in!',
+							"Logged in!",
 							`Hi! ${profile.name}`,
 						);
 					}
 					break;
 				}
-				case 'cancel': {
+				case "cancel": {
 					Alert.alert(
-						'Cancelled!',
-						'Login was cancelled!',
+						"Cancelled!",
+						"Login was cancelled!",
 					);
 					break;
 				}
 				default: {
 					Alert.alert(
-						'Oops!',
-						'Login failed!',
+						"Oops!",
+						"Login failed!",
 					);
 				}
 			}
 		} catch (e) {
 			Alert.alert(
-				'Oops!',
-				'Login failed!',
+				"Oops!",
+				"Login failed!",
 			);
 			console.warn(e);
 		}
 	}
 
 	render() {
-		console.log(this.props.authenticationStore.status);
-		if (this.props.authenticationStore.status == 'first_time')
+		if (this.props.authenticationStore.status == "first_time")
 			return (
 				<AppIntro onDoneBtnClick={() => this.props.auhenticationStore.doneIntro()} doneBtnLabel="Listo" skipBtnLabel="">
 					<View style={[theme.welcomeSlide]}>
-						<Image level={-10} source={require('../assets/images/benbenuto.png')} style={theme.welcomeImage} />
+						<Image level={-10} source={require("../assets/images/benbenuto.png")} style={theme.welcomeImage} />
 						<View level={5}><Text style={theme.text}>¡Bienvenido!</Text></View>
 						<View level={20}><Text style={theme.subtext}>Coffii</Text></View>
 					</View>
 					<View style={[theme.welcomeSlide]}>
-						<Image level={-10} source={require('../assets/images/good-review.png')} style={theme.welcomeImage} />
+						<Image level={-10} source={require("../assets/images/good-review.png")} style={theme.welcomeImage} />
 						<View level={5}><Text style={theme.text}>Reviews</Text></View>
 						<View level={20}><Text style={theme.subtext}>¿Como elegir un buen cafe? De eso no te preocupes, todos los días la comunidad está haciendo reviews</Text></View>
 					</View>
 					<View style={[theme.welcomeSlide]}>
-						<Image level={-10} source={require('../assets/images/coffee.png')} style={theme.welcomeImage} />
+						<Image level={-10} source={require("../assets/images/coffee.png")} style={theme.welcomeImage} />
 						<View level={5}><Text style={theme.text}>Busca, Compra y Disfruta</Text></View>
 						<View level={20}><Text style={theme.subtext}>No te preocupes, encuentra los cafes mas votados por la comunidad.</Text></View>
 					</View>
@@ -114,7 +114,7 @@ class Login extends React.Component {
 						<Text style={theme.welcomeTitle}>Bienvenido!</Text>
 						<TouchableOpacity onPress={this.onPressLoginWithFb.bind(this) } style={{ height: 46, marginTop: 14 }}>
 							<View style={theme.btnWrap}>
-								<Image source={require('../assets/images/facebook.png')} style={theme.btnImage} />
+								<Image source={require("../assets/images/facebook.png")} style={theme.btnImage} />
 								<Text style={[theme.platoCoinText, { fontSize: 14 }]}>INICIAR SESION</Text>
 							</View>
 						</TouchableOpacity>
@@ -130,7 +130,7 @@ class Login extends React.Component {
 	}
 
 	_handlePressRegister = () => {
-		this.props.navigation.navigate('Register');
+		this.props.navigation.navigate("Register");
 	}
 
 }

@@ -6,6 +6,7 @@ import Colors from '../constants/Colors';
 
 import MainTabNavigator from './MainTabNavigator';
 import CoffeeScreen from '../screens/CoffeeScreen';
+import CoffeeRequestScreen from "../screens/CoffeeRequestScreen";
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
 const RootStackNavigator = StackNavigator(
@@ -16,6 +17,9 @@ const RootStackNavigator = StackNavigator(
 		},
 		Coffee: {
 			screen: CoffeeScreen
+		},
+		CoffeeRequest: {
+			screen: CoffeeRequestScreen,
 		}
 	},
 	{
