@@ -7,6 +7,8 @@ import { apiConnector } from "../navigation/Connectors";
 
 import moment from "moment";
 
+import Stars from 'react-native-stars';
+
 import StarsAssets from '../assets/images/stars';
 
 import ApiUtils from "../api/utils";
@@ -40,11 +42,8 @@ import LogOut from "../components/LogOut";
 import theme from "../constants/Theme";
 import api from "../api";
 
-const fullStar = require("../assets/images/starFilled.png");
-const halfStar = require("../assets/images/starHalf.png");
-const emptyStar = require("../assets/images/starEmpty.png");
-
 const ReviewItem = ({ review }) => {
+	console.log(`Review => ${JSON.stringify(review)}`);
 	return (
 		<ListItem key={review.id}>
 			<Card>
@@ -62,13 +61,11 @@ const ReviewItem = ({ review }) => {
 						style={{ alignSelf: "flex-end" }}
 						half={true}
 						disabled={true}
-						value={review.score}
+						value={review.rating}
 						spacing={4}
 						starSize={20}
 						count={5}
-						fullStar={fullStar}
-						emptyStar={emptyStar}
-						halfStar={halfStar} />
+						{...StarsAssets.smallCoffeeBeans} />
 				</CardItem>
 			</Card>
 		</ListItem>
@@ -84,7 +81,7 @@ class ProfileScreen extends React.Component {
 		this.state = {
 			followers: [],
 			following: [],
-			avatar: ApiUtils.getAvatarUrl("me", "m"),
+			avatar: ApiUtils.getAvatarUrl(this.props.userId ? this.props.userId : "me", "m"),
 			reviews: [],
 			userProfile: {}
 		};
@@ -98,7 +95,7 @@ class ProfileScreen extends React.Component {
 	}
 
 	componentDidMount() {
-		this.props.Api.getProfile("me")
+		this.props.Api.getProfile(this.props.userId ? this.props.userId : "me")
 			.then((response) => {
 				const userProfile = response.data;
 				const state = this.state || {};
@@ -109,7 +106,7 @@ class ProfileScreen extends React.Component {
 				console.error(err);
 			});
 
-		this.props.Api.getFollowersForUser("me")
+		this.props.Api.getFollowersForUser(this.props.userId ? this.props.userId : "me")
 			.then((response) => {
 				const followers = response.data;
 				const state = this.state || {};
@@ -120,7 +117,7 @@ class ProfileScreen extends React.Component {
 				console.log(err);
 			});
 
-		this.props.Api.getFollowingForUser("me")
+		this.props.Api.getFollowingForUser(this.props.userId ? this.props.userId : "me")
 			.then((response) => {
 				const following = response.data;
 				const state = this.state || {};
@@ -129,7 +126,7 @@ class ProfileScreen extends React.Component {
 			})
 			.catch((err) => { });
 
-		this.props.Api.getReviewsForUser("me")
+		this.props.Api.getReviewsForUser(this.props.userId ? this.props.userId : "me")
 			.then((response) => {
 				const reviews = response.data;
 				console.log(JSON.stringify(reviews));
@@ -137,7 +134,9 @@ class ProfileScreen extends React.Component {
 				state.reviews = reviews;
 				this.setState(state);
 			})
-			.catch((err) => { });
+			.catch((err) => { 
+				console.log(err);
+			});
 	}
 
 	handleValueChange(isValid, values, validationResults, postSubmit = null, modalNavigator = null) {
@@ -180,7 +179,9 @@ class ProfileScreen extends React.Component {
 					</Row>
 
 					<Row style={{ paddingHorizontal: 5, height: 70 }}>
-						<LogOut />
+						{
+							this.props.userId === "me" || !this.props.userId ? <LogOut /> : null
+						}
 					</Row>
 
 					<Row style={{ height: 50 }}>
@@ -215,6 +216,7 @@ class ProfileScreen extends React.Component {
 
 const styles = StyleSheet.create({
 	container: {
+		marginTop: 10,
 		backgroundColor: 'lightgrey',
 		borderWidth: StyleSheet.hairlineWidth,
 	},
