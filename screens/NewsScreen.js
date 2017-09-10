@@ -23,6 +23,7 @@ import moment from 'moment';
 
 class NewsScreen extends React.Component {
   constructor(props) {
+    console.log("News");
     super(props);
     this.state = {
       loading: true,

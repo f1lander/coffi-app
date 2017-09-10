@@ -118,11 +118,11 @@ class Login extends React.Component {
 								<Text style={[theme.platoCoinText, { fontSize: 14 }]}>INICIAR SESION</Text>
 							</View>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={this._handlePressRegister.bind(this)} style={{ height: 46, marginTop: 14 }}>
+						{/* <TouchableOpacity onPress={this._handlePressRegister.bind(this)} style={{ height: 46, marginTop: 14 }}>
 							<View style={theme.btnWrap}>
 								<Text style={[theme.platoCoinText, { fontSize: 14 }]}>Registrarse</Text>
 							</View>
-						</TouchableOpacity>
+						</TouchableOpacity> */}
 					</Image>
 				</View>
 			</View>

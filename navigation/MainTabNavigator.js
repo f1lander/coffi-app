@@ -6,7 +6,7 @@ import { TabNavigator, TabBarBottom } from 'react-navigation';
 import Colors from '../constants/Colors';
 
 import ProfileScreen from '../screens/ProfileScreen';
-import SearchScreen from '../screens/ExploraScreen';
+import ExploraScreen from '../screens/ExploraScreen';
 import FriendsScreen from '../screens/FriendsScreen';
 import NewsScreen from '../screens/NewsScreen';
 import NewReviewScreen from '../screens/NewReviewScreen';
@@ -17,7 +17,7 @@ export default TabNavigator(
       screen: NewsScreen,
     },
     Search: {
-      screen: SearchScreen,
+      screen: ExploraScreen,
     },
     NewReview: {
       screen: NewReviewScreen,

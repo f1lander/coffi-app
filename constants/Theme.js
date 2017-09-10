@@ -37,11 +37,14 @@ const styles = StyleSheet.create({
 		padding: 10
 	},
 	text: {
-		fontFamily: 'ticketing',
-		color: '#fff',
-		fontSize: 26,
-		backgroundColor: 'transparent',
-		textAlign: 'center'
+		fontFamily: 'nunito-regular',
+	},
+	swipeCardFooter: {
+		flex: 1,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+
 	},
 	subtext: {
 		color: '#fff',
@@ -54,13 +57,11 @@ const styles = StyleSheet.create({
 		height: 32,
 		marginRight: 10
 	},
+
 	// custom input
 	customInput: {
-
-
 		fontFamily: 'nunito-light',
 		height: 40,
-
 	},
 	//Search container for type buttons
 	searchInputContainer: {

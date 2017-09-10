@@ -8,36 +8,46 @@ import {
   View,
 } from 'react-native';
 
-import { Container, DeckSwiper, Left, Header, Thumbnail, Body, Content, Card, CardItem, Text, Icon, Button, Input, CheckBox } from 'native-base';
-
+import { Container, DeckSwiper, Left, Header, Thumbnail, Body, Content, Card, CardItem, Text, Button, Input, Spinner, CheckBox } from 'native-base';
+//import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import { MonoText } from '../components/StyledText';
 
 import Slider from 'react-native-slider';
 
 import Stars from 'react-native-stars';
 
+import { apiConnector } from "../navigation/Connectors";
+
 import theme from '../constants/Theme';
 
-export default class SearchScreen extends React.Component {
+import colors from '../constants/Colors'
+
+class ExploraScreen extends React.Component {
   static navigationOptions = {
     title: "Explora",
   };
 
   constructor(props) {
+
     super(props);
     this.state = {
       error: false,
       loading: true,
       coffees: [],
     };
+  };
 
-    this.props.Api.getCoffee().then(response => {
+  componentDidMount() {
+    this.props.Api.getCoffees().then(response => {
+
       if (response.ok) {
+        console.log(response.data);
         this.setState({
           coffees: response.data,
           loading: false,
         })
       } else {
+
         this.setState({
           error: true,
           coffees: [],
@@ -49,37 +59,56 @@ export default class SearchScreen extends React.Component {
 
   render() {
     return (
+
       <Container>
-        
-        <View>
-          <DeckSwiper
-            dataSource={this.state.coffees}
-            renderItem={item =>
-              <Card style={{ elevation: 3 }}>
-                <CardItem>
-                  <Left>
-                    <Thumbnail source={item.image.url} />
-                    <Body>
-                      <Text>{item.brand.name}</Text>
-                      <Text note>{item.variety.description}</Text>
-                    </Body>
-                  </Left>
-                </CardItem>
-                <CardItem cardBody>
-                  <Image style={{ height: 300, flex: 1 }} source={item.image.url} />
-                </CardItem>
-                <CardItem style={theme.exploraSwipeCard} >
-                  <Text>Altitude:</Text>
-                  <Text>{item.altitude}</Text>
-                  <Text>Rating:</Text>
-                  <Text>{item.avg_rating}</Text>
-                  <Text>Roasted:</Text>
-                  <Text>{item.roast}</Text>
-                </CardItem>
-              </Card>
-            }
-          />
-        </View>
+        {
+          this.state.loading ?
+            (
+              <View style={{ flex: 1, alignItems: 'center' }}>
+                <Spinner color='#FFCD30' />
+              </View>
+            ) : null
+        }
+        {
+          this.state.coffees.length > 0 ?
+            (
+              <View>
+                <DeckSwiper
+                  dataSource={this.state.coffees}
+                  renderItem={item =>
+                    <Card style={{ elevation: 3 }}>
+                      <CardItem>
+                        <Left>
+                          <Thumbnail source={{ uri: 'http://cafe504.com/wp-content/uploads/2017/06/logo504cafe.png' }} />
+                          <Body>
+                            <Text style={theme.text}>{item.brand.name}</Text>
+                            <Text style={theme.text} note>{item.variety.description}</Text>
+                          </Body>
+                        </Left>
+                      </CardItem>
+                      <CardItem cardBody>
+                        <Image style={{ height: 300, flex: 1 }} source={{ uri: item.image.url }} />
+                      </CardItem>
+                      <CardItem style={theme.exploraSwipeCard}>
+                        <View style={theme.swipeCardFooter}>
+                        <Icon name="arrow-up" style={{ color: colors.coffii }} />
+                          <Text style={theme.text}>{item.altitude} mts.</Text>
+                        </View>
+                        <View style={theme.swipeCardFooter}>
+                          <Icon name="star" style={{ color: colors.coffii }} />
+                          <Text style={theme.text}>{item.avg_rating}</Text>
+                        </View>
+                        <View style={theme.swipeCardFooter}>
+                        <Icon name="controller-record" style={{ color: colors.coffii }} />
+                          <Text style={theme.text}>{item.roast}</Text>
+                        </View>
+                      </CardItem>
+                    </Card>
+                  }
+                />
+              </View>
+            ) : null
+        }
       </Container>
     );
   }
@@ -170,3 +199,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   }
 });
+
+
+export default apiConnector(ExploraScreen);
