@@ -8,8 +8,8 @@ import {
   View,
 } from 'react-native';
 
-import { Container, DeckSwiper, Left, Header, Thumbnail, Body, Content, Card, CardItem, Text, Button, Input, Spinner, CheckBox } from 'native-base';
-//import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import { Container, DeckSwiper, Left, Header, Thumbnail, Body, Content, Card, CardItem, Text, Icon, Button, Input, Spinner, CheckBox } from 'native-base';
+
 import { MonoText } from '../components/StyledText';
 
 import Slider from 'react-native-slider';
@@ -79,7 +79,7 @@ class ExploraScreen extends React.Component {
                     <Card style={{ elevation: 3 }}>
                       <CardItem>
                         <Left>
-                          <Thumbnail source={{ uri: 'http://cafe504.com/wp-content/uploads/2017/06/logo504cafe.png' }} />
+                          <Thumbnail source={{ uri: item.brand.name == "Cafe 504" ? 'http://cafe504.com/wp-content/uploads/2017/06/logo504cafe.png' : item.image.url }} />
                           <Body>
                             <Text style={theme.text}>{item.brand.name}</Text>
                             <Text style={theme.text} note>{item.variety.description}</Text>
@@ -99,7 +99,7 @@ class ExploraScreen extends React.Component {
                           <Text style={theme.text}>{item.avg_rating}</Text>
                         </View>
                         <View style={theme.swipeCardFooter}>
-                        <Icon name="controller-record" style={{ color: colors.coffii }} />
+                        <Icon name="ios-bonfire" style={{ color: colors.coffii }} />
                           <Text style={theme.text}>{item.roast}</Text>
                         </View>
                       </CardItem>
