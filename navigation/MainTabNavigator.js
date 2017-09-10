@@ -28,6 +28,7 @@ export default TabNavigator(
     },
     Profile: {
       screen: ProfileScreen,
+
     },
   },
   {

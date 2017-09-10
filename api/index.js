@@ -72,6 +72,12 @@ const create = (baseURL = BASE_URL) => {
   // way at this level.
   //
 
+  const isFollowing = (follower, following) => api.get(`/users/${follower}/following/${following}`);
+
+  const follow = (userId) => api.post(`/users/${userId}/follow`);
+
+  const unfollow = (userId) => api.post(`/users/${userId}/unfollow`);
+
   const submitCoffeeRequest = (data) => api.post(`/CoffeeRequests`, data);
 
   const getProfile = (userId) => api.get(`/users/${userId}`);
@@ -110,7 +116,7 @@ const create = (baseURL = BASE_URL) => {
 
   const getRelatedCoffees = (id) => api.get(`/coffees/${id}/related-coffees`)
 
-  
+
   // ------
   // STEP 3
   // ------
@@ -145,7 +151,10 @@ const create = (baseURL = BASE_URL) => {
     getFollowingForUser,
     getReviewsForUser,
     submitCoffeeRequest,
-    getRelatedCoffees
+    getRelatedCoffees,
+    isFollowing,
+    follow,
+    unfollow,
   }
 }
 

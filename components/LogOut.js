@@ -10,7 +10,7 @@ export default class LogOut extends React.Component {
 			<TouchableOpacity onPress={() => this.props.authenticationStore.logout()} style={{ flex: 1, height: 50 }}>
 				<View style={[theme.btnWrap, { flex: 1 }]}>
 					<Image source={require('../assets/images/off.png')} style={theme.btnImage} />
-					<Text style={theme.btnText}>CERRAR SESION</Text>
+					<Text style={theme.btnText}>LOGOUT</Text>
 				</View>
 			</TouchableOpacity>
 		);
