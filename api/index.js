@@ -110,7 +110,13 @@ const create = (baseURL = BASE_URL) => {
 
   const getRelatedCoffees = (id) => api.get(`/coffees/${id}/related-coffees`)
 
-  
+  const getFollowing = (id) => api.get(`/users/${id}/following`)
+
+  const getFollowers = (id) => api.get(`/users/${id}/followers`)
+
+  const getTimeline = () => api.get('/users/timeline')
+
+
   // ------
   // STEP 3
   // ------
@@ -123,6 +129,7 @@ const create = (baseURL = BASE_URL) => {
   // because it is scoped privately.  This is one way to create truly
   // private scoped goodies in JavaScript.
   //
+
   return {
     // a list of the API functions from step 2
     userLogin,
@@ -145,7 +152,10 @@ const create = (baseURL = BASE_URL) => {
     getFollowingForUser,
     getReviewsForUser,
     submitCoffeeRequest,
-    getRelatedCoffees
+    getRelatedCoffees,
+    getFollowing,
+    getFollowers,
+    getTimeline
   }
 }
 

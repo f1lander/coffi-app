@@ -171,7 +171,7 @@ class ProfileScreen extends React.Component {
 			<Container style={{ backgroundColor: "white" }}>
 				<Grid>
 					<Row style={{ alignItems: "center" }} size={1}>
-						<Image style={theme.avatarImage} source={this.state.avatar ? { uri: this.state.avatar } : require("../assets/images/avatar.png")} />
+						<Image style={theme.avatarImage} source={{uri: ApiUtils.getAvatarUrl(this.state.userProfile.id)}} />
 						<View style={{ flexDirection: "column", justifyContent: "flex-start", alignItems: "center" }}>
 							<Text style={[theme.platoCoinText]}>{this.state.userProfile.fullname}</Text>
 							<Text style={[theme.platoCoinText, { fontSize: 12, fontStyle: "normal" }]}>SPS, Honduras</Text>

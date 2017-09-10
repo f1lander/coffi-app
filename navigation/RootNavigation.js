@@ -30,15 +30,15 @@ const RootStackNavigator = StackNavigator(
 			},
 			headerTitleStyle: {
 				fontWeight: 'normal',
-				backgroundColor: Colors.tintColor,
+				backgroundColor: 'transparent',
 				fontFamily: 'nunito-black',
-				color: '#78441D'
+				color: Colors.primary
 			},
 			headerBackTitleStyle: {
 				fontWeight: 'normal',
-				backgroundColor: Colors.tintColor,
+				backgroundColor: 'transparent',
 				fontFamily: 'nunito-black',
-				color: '#78441D',
+				color: Colors.primary,
 				paddingRight: 15,
 				paddingLeft: 15,
 			},

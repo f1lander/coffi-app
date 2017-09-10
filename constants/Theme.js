@@ -218,15 +218,9 @@ const styles = StyleSheet.create({
 		width: 100,
 		height: 100
 	},
-<<<<<<< HEAD
-	'avatarImage': {
-		width: 80,
-		height: 80,
-=======
 	'avatarImage':{
 		width: 150,
 		height: 150,
->>>>>>> 488927e15b1c1a33ba74f7c77294e9120cd9ef47
 		resizeMode: 'cover',
 		borderRadius: 75,
 		margin: 10,
