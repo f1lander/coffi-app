@@ -185,7 +185,7 @@ class ProfileScreen extends React.Component {
 							<Text style={styles.subText}>Following</Text>
 						</Col>
 						<Col style={styles.container}>
-							<Text style={styles.text}>10</Text>
+							<Text style={styles.text}>{this.state.reviews.length}</Text>
 							<Text style={styles.subText}>Reviews</Text>
 						</Col>
 					</Row>
