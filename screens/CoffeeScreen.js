@@ -172,7 +172,7 @@ class CoffeeScreen extends React.Component {
           <Left>
             <Thumbnail source={{ uri: utils.getAvatarUrl(data.userId) }} />
             <Body>
-              <Text>{data.user && data.user.username}</Text>
+              <Text>{data.user && (data.user.fullname || data.user.username)}</Text>
               <Text note>{data.user && data.user.location}</Text>
             </Body>
           </Left>
