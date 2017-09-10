@@ -91,9 +91,6 @@ class ProfileScreen extends React.Component {
 		title: "Profile",
 	};
 
-	componentWillMount() {
-	}
-
 	componentDidMount() {
 		this.props.Api.getProfile(this.props.userId ? this.props.userId : "me")
 			.then((response) => {
@@ -134,35 +131,9 @@ class ProfileScreen extends React.Component {
 				state.reviews = reviews;
 				this.setState(state);
 			})
-			.catch((err) => { 
+			.catch((err) => {
 				console.log(err);
 			});
-	}
-
-	handleValueChange(isValid, values, validationResults, postSubmit = null, modalNavigator = null) {
-		// if(isValid === true){
-		// 	api.get("/profile/"+this.state.userStore.userid, values).then((response)=>{
-		// 		if(response.problem){
-		// 			Toast.show({
-		// 				text: "Error en la conexión ("+ response.problem +")",
-		// 				position: "bottom",
-		// 				type: "warning",
-		// 				duration: 5000
-		// 			});
-
-		// 			postSubmit();
-		// 		}else{
-		// 			Toast.show({
-		// 				text: "Se guardo el perfil con exito!",
-		// 				position: "bottom",
-		// 				type: "success",
-		// 				duration: 5000
-		// 			});
-
-		// 			postSubmit();
-		// 		}
-		// 	});
-		// }
 	}
 
 	render() {
@@ -171,7 +142,9 @@ class ProfileScreen extends React.Component {
 			<Container style={{ backgroundColor: "white" }}>
 				<Grid>
 					<Row style={{ alignItems: "center" }} size={1}>
-						<Image style={theme.avatarImage} source={this.state.avatar ? { uri: this.state.avatar } : require("../assets/images/avatar.png")} />
+						<Image style={theme.avatarImage} source={{
+							uri: this.state.avatar ? this.state.avatar : require("../assets/images/avatar.png")
+						}} />
 						<View style={{ flexDirection: "column", justifyContent: "flex-start", alignItems: "center" }}>
 							<Text style={[theme.platoCoinText]}>{this.state.userProfile.fullname}</Text>
 							<Text style={[theme.platoCoinText, { fontSize: 12, fontStyle: "normal" }]}>SPS, Honduras</Text>
