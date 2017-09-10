@@ -178,8 +178,8 @@ class CoffeeScreen extends React.Component {
           <Left>
             <Thumbnail source={{ uri: utils.getAvatarUrl(review.userId) }} />
             <Body>
-              <Text>{review.user && review.user.username}</Text>
-              <Text note>{review.user && review.user.location}</Text>
+              <Text>{data.user && (data.user.fullname || data.user.username)}</Text>
+              <Text note>{data.user && data.user.location}</Text>
             </Body>
           </Left>
         </CardItem>
@@ -512,7 +512,7 @@ const styles = StyleSheet.create({
   },
   fixedSectionIcon: {
     color: '#999',
-    fontSize: 20
+    fontSize: 30
   },
   parallaxHeader: {
     alignItems: 'center',

@@ -9,6 +9,7 @@ import { Spinner } from 'native-base';
 export class ScanCoffeeScreen extends React.Component {
   state = {
     image: null,
+    loading: false
   };
 
   static navigationOptions = {
@@ -54,7 +55,7 @@ export class ScanCoffeeScreen extends React.Component {
     });
 
     if (!result.cancelled) {
-      this.setState({ image: result.uri });
+      this.setState({ image: result.uri, loading: true });
     }
 
     if (result.base64) {
@@ -70,6 +71,8 @@ export class ScanCoffeeScreen extends React.Component {
         } else {
           window.alert("Error");
         }
+
+        this.setState({image: null, loading: false});
       });
     }
 

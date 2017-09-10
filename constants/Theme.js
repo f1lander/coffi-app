@@ -14,6 +14,14 @@ const styles = StyleSheet.create({
 		height: 24,
 		backgroundColor: 'rgba(0,0,0,0.2)',
 	},
+	exploraSwipeCard: {
+		flex: 1,
+		flexDirection:
+		'row',
+		justifyContent:
+		'space-between',
+		alignItems: 'center'
+	},
 	'view': {
 		flex: 1,
 		flexDirection: 'column',
@@ -29,11 +37,14 @@ const styles = StyleSheet.create({
 		padding: 10
 	},
 	text: {
-		fontFamily: 'ticketing',
-		color: '#fff',
-		fontSize: 26,
-		backgroundColor: 'transparent',
-		textAlign: 'center'
+		fontFamily: 'nunito-regular',
+	},
+	swipeCardFooter: {
+		flex: 1,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+
 	},
 	subtext: {
 		color: '#fff',
@@ -46,19 +57,17 @@ const styles = StyleSheet.create({
 		height: 32,
 		marginRight: 10
 	},
+
 	// custom input
 	customInput: {
-	
-	
 		fontFamily: 'nunito-light',
 		height: 40,
-
 	},
 	//Search container for type buttons
 	searchInputContainer: {
 		flex: 1,
 		flexDirection: 'row',
-		alignItems:'center'
+		alignItems: 'center'
 	},
 	// WELCOME
 	welcomeSlide: {
@@ -218,7 +227,7 @@ const styles = StyleSheet.create({
 		width: 100,
 		height: 100
 	},
-	'avatarImage':{
+	'avatarImage': {
 		width: 150,
 		height: 150,
 		resizeMode: 'cover',

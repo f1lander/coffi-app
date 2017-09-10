@@ -1,8 +1,8 @@
 {
-  "name": "cofi-app",
+  "name": "coffii-app",
   "version": "0.0.0",
-  "description": "Hello Expo!",
-  "author": null,
+  "description": "The best coffee-drinking experience in the world",
+  "author": "Coffii Inc.",
   "license": "",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {

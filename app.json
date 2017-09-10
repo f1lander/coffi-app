@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "cofi-app",
-    "description": "No description",
-    "slug": "cofi-app",
-    "privacy": "public",
+    "name": "coffii-app",
+    "description": "The best coffee-drinking experience in the world",
+    "slug": "coffii-app",
+    "privacy": "unlisted",
     "sdkVersion": "19.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -22,7 +22,11 @@
       "assetExts": ["ttf"]
     },
     "ios": {
+      "bundleIdentifier": "co.coffii.app",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "co.coffii.app"
     }
   }
 }

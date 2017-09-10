@@ -77,10 +77,10 @@ class FriendsScreen extends Component {
           <Text>{data.fullname || data.username}</Text>
           <Text note></Text>
         </Body>
-        <Right>
+      <Right>
           <Text note></Text>
         </Right>
-      </ListItem>
+      </ListItem >
     )
   }
 
