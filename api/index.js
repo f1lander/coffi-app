@@ -161,7 +161,10 @@ const create = (baseURL = BASE_URL) => {
     getRelatedCoffees,
     getFollowing,
     getFollowers,
-    getTimeline
+    getTimeline,
+    isFollowing,
+    follow,
+    unfollow
   }
 }
 
