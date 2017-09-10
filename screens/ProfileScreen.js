@@ -39,6 +39,7 @@ import { observer, inject } from "mobx-react";
 
 import { Icon } from "@expo/vector-icons";
 import LogOut from "../components/LogOut";
+import FollowButtom from "../components/FollowButtton";
 import theme from "../constants/Theme";
 import api from "../api";
 
@@ -78,10 +79,11 @@ class ProfileScreen extends React.Component {
 
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			followers: [],
 			following: [],
-			avatar: ApiUtils.getAvatarUrl(this.props.userId ? this.props.userId : "me", "m"),
+			avatar: ApiUtils.getAvatarUrl(this.props.owner || "me", "m"),
 			reviews: [],
 			userProfile: {}
 		};
@@ -91,11 +93,8 @@ class ProfileScreen extends React.Component {
 		title: "Profile",
 	};
 
-	componentWillMount() {
-	}
-
 	componentDidMount() {
-		this.props.Api.getProfile(this.props.userId ? this.props.userId : "me")
+		this.props.Api.getProfile(this.props.owner || "me")
 			.then((response) => {
 				const userProfile = response.data;
 				const state = this.state || {};
@@ -106,7 +105,7 @@ class ProfileScreen extends React.Component {
 				console.error(err);
 			});
 
-		this.props.Api.getFollowersForUser(this.props.userId ? this.props.userId : "me")
+		this.props.Api.getFollowersForUser(this.props.owner || "me")
 			.then((response) => {
 				const followers = response.data;
 				const state = this.state || {};
@@ -117,7 +116,7 @@ class ProfileScreen extends React.Component {
 				console.log(err);
 			});
 
-		this.props.Api.getFollowingForUser(this.props.userId ? this.props.userId : "me")
+		this.props.Api.getFollowingForUser(this.props.owner || "me")
 			.then((response) => {
 				const following = response.data;
 				const state = this.state || {};
@@ -126,7 +125,7 @@ class ProfileScreen extends React.Component {
 			})
 			.catch((err) => { });
 
-		this.props.Api.getReviewsForUser(this.props.userId ? this.props.userId : "me")
+		this.props.Api.getReviewsForUser(this.props.owner || "me")
 			.then((response) => {
 				const reviews = response.data;
 				console.log(JSON.stringify(reviews));
@@ -134,35 +133,9 @@ class ProfileScreen extends React.Component {
 				state.reviews = reviews;
 				this.setState(state);
 			})
-			.catch((err) => { 
+			.catch((err) => {
 				console.log(err);
 			});
-	}
-
-	handleValueChange(isValid, values, validationResults, postSubmit = null, modalNavigator = null) {
-		// if(isValid === true){
-		// 	api.get("/profile/"+this.state.userStore.userid, values).then((response)=>{
-		// 		if(response.problem){
-		// 			Toast.show({
-		// 				text: "Error en la conexión ("+ response.problem +")",
-		// 				position: "bottom",
-		// 				type: "warning",
-		// 				duration: 5000
-		// 			});
-
-		// 			postSubmit();
-		// 		}else{
-		// 			Toast.show({
-		// 				text: "Se guardo el perfil con exito!",
-		// 				position: "bottom",
-		// 				type: "success",
-		// 				duration: 5000
-		// 			});
-
-		// 			postSubmit();
-		// 		}
-		// 	});
-		// }
 	}
 
 	render() {
@@ -180,7 +153,7 @@ class ProfileScreen extends React.Component {
 
 					<Row style={{ paddingHorizontal: 5, height: 70 }}>
 						{
-							this.props.userId === "me" || !this.props.userId ? <LogOut /> : null
+							!this.props.owner ?   < LogOut /> : <FollowButtom follower={"me"} following={this.props.owner} />
 						}
 					</Row>
 

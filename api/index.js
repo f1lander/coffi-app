@@ -72,6 +72,12 @@ const create = (baseURL = BASE_URL) => {
   // way at this level.
   //
 
+  const isFollowing = (follower, following) => api.get(`/users/${follower}/following/${following}`);
+
+  const follow = (userId) => api.post(`/users/${userId}/follow`);
+
+  const unfollow = (userId) => api.post(`/users/${userId}/unfollow`);
+
   const submitCoffeeRequest = (data) => api.post(`/CoffeeRequests`, data);
 
   const getProfile = (userId) => api.get(`/users/${userId}`);
