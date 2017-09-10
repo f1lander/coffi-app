@@ -505,7 +505,7 @@ const styles = StyleSheet.create({
   },
   fixedSectionIcon: {
     color: '#999',
-    fontSize: 20
+    fontSize: 30
   },
   parallaxHeader: {
     alignItems: 'center',
