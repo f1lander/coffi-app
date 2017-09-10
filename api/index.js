@@ -102,6 +102,8 @@ const create = (baseURL = BASE_URL) => {
 
   const loginWithFacebook = (accessToken) => api.get(`${AUTH_FACEBOOK_CALLBACK_URL}?access_token=${accessToken}`)
 
+  const getCoffee = () => api.get('/coffees')
+
   const getCoffeeById = (id) => api.get(`/coffees/${id}`);
 
   const getReviewsByCoffeeId = (id) => api.get(`/coffees/${id}/reviews`);
@@ -121,6 +123,8 @@ const create = (baseURL = BASE_URL) => {
   const getFollowers = (id) => api.get(`/users/${id}/followers`)
 
   const getTimeline = () => api.get('/users/timeline')
+  
+  
 
 
   // ------

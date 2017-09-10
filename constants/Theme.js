@@ -14,6 +14,14 @@ const styles = StyleSheet.create({
 		height: 24,
 		backgroundColor: 'rgba(0,0,0,0.2)',
 	},
+	exploraSwipeCard: {
+		flex: 1,
+		flexDirection:
+		'row',
+		justifyContent:
+		'space-between',
+		alignItems: 'center'
+	},
 	'view': {
 		flex: 1,
 		flexDirection: 'column',
@@ -48,8 +56,8 @@ const styles = StyleSheet.create({
 	},
 	// custom input
 	customInput: {
-	
-	
+
+
 		fontFamily: 'nunito-light',
 		height: 40,
 
@@ -58,7 +66,7 @@ const styles = StyleSheet.create({
 	searchInputContainer: {
 		flex: 1,
 		flexDirection: 'row',
-		alignItems:'center'
+		alignItems: 'center'
 	},
 	// WELCOME
 	welcomeSlide: {
@@ -218,7 +226,7 @@ const styles = StyleSheet.create({
 		width: 100,
 		height: 100
 	},
-	'avatarImage':{
+	'avatarImage': {
 		width: 150,
 		height: 150,
 		resizeMode: 'cover',
