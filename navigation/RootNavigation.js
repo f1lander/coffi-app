@@ -5,6 +5,7 @@ import { StackNavigator } from 'react-navigation';
 import Colors from '../constants/Colors';
 
 import MainTabNavigator from './MainTabNavigator';
+import ProfileScreen from "../screens/ProfileScreen";
 import CoffeeScreen from '../screens/CoffeeScreen';
 import CoffeeRequestScreen from "../screens/CoffeeRequestScreen";
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
@@ -20,6 +21,9 @@ const RootStackNavigator = StackNavigator(
 		},
 		CoffeeRequest: {
 			screen: CoffeeRequestScreen,
+		},
+		UserProfile: {
+			screen: ProfileScreen,
 		}
 	},
 	{

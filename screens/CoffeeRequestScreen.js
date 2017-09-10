@@ -53,8 +53,6 @@ class CoffeeRequestScreen extends React.Component {
             coffee,
         };
 
-        console.log(JSON.stringify(postData));
-
         return this.props.Api.submitCoffeeRequest(postData)
             .then((data) => {
                 window.alert("Thank you!");

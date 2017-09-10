@@ -58,6 +58,12 @@ class CoffeeScreen extends React.Component {
       loadingReviews: true,
       loadingPersonalReviews: true,
     }
+
+    this.showProfile = this.showProfile.bind(this);
+  }
+
+  showProfile(userId) {
+
   }
 
   componentDidMount() {
@@ -165,12 +171,12 @@ class CoffeeScreen extends React.Component {
     )
   }
 
-  _renderCard(data) {
+  _renderCard(review) {
     return (
-      <Card key={'review-' + data.id}>
+      <Card key={'review-' + review.id}>
         <CardItem>
           <Left>
-            <Thumbnail source={{ uri: utils.getAvatarUrl(data.userId) }} />
+            <Thumbnail source={{ uri: utils.getAvatarUrl(review.userId) }} />
             <Body>
               <Text>{data.user && (data.user.fullname || data.user.username)}</Text>
               <Text note>{data.user && data.user.location}</Text>
@@ -179,26 +185,26 @@ class CoffeeScreen extends React.Component {
         </CardItem>
         <CardItem>
           <Body>
-            <Text>{data.comment}</Text>
+            <Text>{review.comment}</Text>
           </Body>
         </CardItem>
         {
-          data.method && (
+          review.method && (
             <CardItem>
               <Icon active name="flask" style={{ opacity: 0.7 }} />
-              <Text>{data.method && (data.method.name || data.method.description)}</Text>
+              <Text>{review.method && (review.method.name || review.method.description)}</Text>
             </CardItem>
           )
         }
         <CardItem>
-          <Left key={"rate-" + data.rating.toString()} >
-            {this._renderStar(data.rating)}
+          <Left key={"rate-" + review.rating.toString()} >
+            {this._renderStar(review.rating)}
           </Left>
           <Body>
-            {data.method && (data.method.name || data.method.description)}
+            {review.method && (review.method.name || review.method.description)}
           </Body>
           <Right>
-            <Text>{data.updatedAt && moment(data.updatedAt).fromNow()}</Text>
+            <Text>{review.updatedAt && moment(review.updatedAt).fromNow()}</Text>
           </Right>
         </CardItem>
       </Card>
@@ -285,6 +291,7 @@ class CoffeeScreen extends React.Component {
     if (!data) {
       return <View></View>
     }
+
     return (
       <View style={styles.container}>
         <View style={{ flex: 1, flexDirection: 'row' }}>

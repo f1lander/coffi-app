@@ -63,7 +63,8 @@ class FriendsScreen extends Component {
   }
 
   handlePressUser(id) {
-    window.alert(id);
+    const { navigate } = this.props.navigation;
+    navigate("UserProfile", { owner: id });
   }
 
   renderRow(data) {
