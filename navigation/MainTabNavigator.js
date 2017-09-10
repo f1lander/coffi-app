@@ -22,7 +22,6 @@ export default TabNavigator(
     NewReview: {
       screen: NewReviewScreen,
     },
-
     Friends: {
       screen: FriendsScreen,
     },
@@ -47,7 +46,7 @@ export default TabNavigator(
             iconName = 'ios-qr-scanner-outline';
             break;
           case 'Search':
-            iconName = 'ios-globe-outline';
+            iconName = 'ios-search-outline';
             break;
           case 'Friends':
             iconName = 'ios-contacts-outline';

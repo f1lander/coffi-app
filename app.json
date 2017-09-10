@@ -8,7 +8,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
-    "icon": "./assets/icons/app-icon.png",
+    "icon": "./assets/icons/appicon.png",
     "facebookScheme": "fb113119379370031",
     "notification": {
       "icon": "./assets/icons/notification-icon.png",

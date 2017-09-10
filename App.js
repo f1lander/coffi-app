@@ -49,13 +49,12 @@ export default class App extends React.Component {
 					require('./assets/images/bg.jpg'),
 					
 					require('./assets/images/facebook.png'),
-					require('./assets/images/whatsapp.png'),
+					
 					require('./assets/images/coin.png'),
 					
 					require('./assets/images/not.png'),
 					require('./assets/images/off.png'),
-					require('./assets/images/save.png'),
-					require('./assets/images/reserva.png'),
+					require('./assets/images/save.png'),					
 
 					require('./assets/images/avatar.png'),
 					require('./assets/images/color/user.png'),
