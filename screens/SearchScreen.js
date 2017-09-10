@@ -43,7 +43,8 @@ export default class SearchScreen extends React.Component {
                 <Icon name="search" style={{ color: 'gray' }} />
                 <Input placeholder="Search by Coffee Brand" style={theme.customInput} />
               </View>
-              
+              <View>
+              </View>              
             </Content>
           </Container>
         </ScrollView>
