@@ -15,6 +15,7 @@
       "color": "#000000"
     },
     "loading": {
+      "backgroundColor": "#3c4858",
       "icon": "./assets/icons/loading-icon.png",
       "hideExponentText": false
     },

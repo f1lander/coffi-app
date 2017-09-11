@@ -58,12 +58,11 @@ class CoffeeScreen extends React.Component {
       loadingReviews: true,
       loadingPersonalReviews: true,
     }
-
-    this.showProfile = this.showProfile.bind(this);
   }
 
   showProfile(userId) {
-
+    const { navigate } = this.props.navigation;
+    navigate("UserProfile", { owner: id });
   }
 
   componentDidMount() {
@@ -176,7 +175,9 @@ class CoffeeScreen extends React.Component {
       <Card key={'review-' + review.id}>
         <CardItem>
           <Left>
-            <Thumbnail source={{ uri: utils.getAvatarUrl(review.userId) }} />
+            <TouchableOpacity onPress={() => this.showProfile(review.userId)}>
+              <Thumbnail source={{ uri: utils.getAvatarUrl(review.userId) }} />
+            </TouchableOpacity>
             <Body>
               <Text>{data.user && (data.user.fullname || data.user.username)}</Text>
               <Text note>{data.user && data.user.location}</Text>

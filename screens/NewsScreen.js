@@ -67,12 +67,24 @@ class NewsScreen extends React.Component {
     )
   }
 
+  handlePressUser(id){
+    const { navigate } = this.props.navigation;
+    navigate("UserProfile", { owner: id });
+  }
+
+  handlePressCoffee(id){
+    const { navigate } = this.props.navigation;
+    navigate('Coffee', { id: id});
+  }
+
   _renderCard(data) {
     return (
       <Card key={data.id}>
         <CardItem>
           <Left>
-            <Thumbnail source={{ uri: utils.getAvatarUrl(data.userId)}} />
+            <TouchableOpacity onPress={() => this.handlePressUser(data.userId)}>
+              <Thumbnail source={{ uri: utils.getAvatarUrl(data.userId)}} />
+            </TouchableOpacity>
             <Body>
               <Text>{data.user.fullname || data.user.username}</Text>
               <Text note>{data.user.location || ''}</Text>
@@ -87,7 +99,7 @@ class NewsScreen extends React.Component {
         <CardItem cardBody>
           <Image source={{ uri: data.image && data.image.url ||  utils.getCoffeeImageUrl(data.coffeeId)}} style={{ height: 200, width: null, flex: 1 }} />
         </CardItem>
-        <CardItem>
+        <CardItem button onPress={() => this.handlePressCoffee(data.coffeeId)}>
           <Left>
             {this._renderStar(data.rating)}
           </Left>

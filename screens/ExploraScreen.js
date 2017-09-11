@@ -56,6 +56,11 @@ class ExploraScreen extends React.Component {
       }
     });
   };
+  
+  handlePressCoffee(id){
+    const { navigate } = this.props.navigation;
+    navigate('Coffee', { id: id});
+  }
 
   render() {
     return (
@@ -86,7 +91,7 @@ class ExploraScreen extends React.Component {
                           </Body>
                         </Left>
                       </CardItem>
-                      <CardItem cardBody>
+                      <CardItem cardBody button onPress={() => this.handlePressCoffee(data.id)}>
                         <Image style={{ height: 300, flex: 1 }} source={{ uri: item.image.url }} />
                       </CardItem>
                       <CardItem style={theme.exploraSwipeCard}>
