@@ -107,7 +107,7 @@ class CoffeeScreen extends React.Component {
             if (response.ok) {
               this.props.coffeeStore.updateCoffee(params.id, { reviews: response.data });
             } else {
-              console.log('Error fetching personal reviews: ' + response.problem);
+              console.log('Error fetching reviews: ' + response.problem);
             }
     
             this.setState({
@@ -139,7 +139,7 @@ class CoffeeScreen extends React.Component {
                   this.props.coffeeStore.updateCoffee(coffee.id, {...coffee});
                 });
               } else {
-                console.log('Error fetching personal reviews: ' + response.problem);
+                console.log('Error fetching related coffee: ' + response.problem);
               }
       
               this.setState({
@@ -179,8 +179,8 @@ class CoffeeScreen extends React.Component {
               <Thumbnail source={{ uri: utils.getAvatarUrl(review.userId) }} />
             </TouchableOpacity>
             <Body>
-              <Text>{data.user && (data.user.fullname || data.user.username)}</Text>
-              <Text note>{data.user && data.user.location}</Text>
+              <Text>{review.user && (review.user.fullname || review.user.username)}</Text>
+              <Text note>{review.user && review.user.location}</Text>
             </Body>
           </Left>
         </CardItem>
