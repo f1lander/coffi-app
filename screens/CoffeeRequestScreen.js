@@ -57,12 +57,21 @@ class CoffeeRequestScreen extends React.Component {
             coffee,
         };
 
+        this.setState({
+            sending: true,
+        })
+
         return this.props.Api.submitCoffeeRequest(postData)
             .then((data) => {
                 window.alert("Thank you!");
                 goBack(null);
             })
             .catch((err) => {
+                this.setState({
+                    sending: false
+                });
+
+                window.alert("An error ocurred, Please try again!");
                 console.log(JSON.stringify(err));
             });
     }
@@ -121,9 +130,9 @@ class CoffeeRequestScreen extends React.Component {
                                 keyboardType="numeric"
                                 floatingLabel={true}
                                 onChangeText={(altitude) => {
-                                    const state = this.state;
-                                    state.coffee.altitude = altitude;
-                                    this.setState(state);
+                                    let { coffee } = this.state;
+                                    coffee.altitude = altitude;
+                                    this.setState({coffee});
                                 }}
                                 numberOfLines={1}
                                 value={this.state.altitude}
@@ -170,8 +179,8 @@ class CoffeeRequestScreen extends React.Component {
                 </Content>
                 <Footer>
                     <FooterTab>
-                        <Button full onPress={() => this.submitCoffeeRequest()}>
-                            <Text>Submit Coffee</Text>
+                        <Button full disabled={this.state.sending} onPress={() => this.submitCoffeeRequest()}>
+                            <Text>{this.state.sending ? 'Sending...': 'Submit Coffee'}</Text>
                         </Button>
                     </FooterTab>
                 </Footer>
