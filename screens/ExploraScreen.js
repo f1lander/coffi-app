@@ -59,57 +59,60 @@ class ExploraScreen extends React.Component {
 
   render() {
     return (
-
-      <Container>
-        {
-          this.state.loading ?
-            (
-              <View style={{ flex: 1, alignItems: 'center' }}>
-                <Spinner color='#FFCD30' />
-              </View>
-            ) : null
-        }
-        {
-          this.state.coffees.length > 0 ?
-            (
-              <View>
-                <DeckSwiper
-                  dataSource={this.state.coffees}
-                  renderItem={item =>
-                    <Card style={{ elevation: 3 }}>
-                      <CardItem>
-                        <Left>
-                          <Thumbnail source={{ uri: item.brand.name == "Cafe 504" ? 'http://cafe504.com/wp-content/uploads/2017/06/logo504cafe.png' : item.image.url }} />
-                          <Body>
-                            <Text style={theme.text}>{item.brand.name}</Text>
-                            <Text style={theme.text} note>{item.variety.description}</Text>
-                          </Body>
-                        </Left>
-                      </CardItem>
-                      <CardItem cardBody>
-                        <Image style={{ height: 300, flex: 1 }} source={{ uri: item.image.url }} />
-                      </CardItem>
-                      <CardItem style={theme.exploraSwipeCard}>
-                        <View style={theme.swipeCardFooter}>
-                        <Icon name="arrow-up" style={{ color: colors.coffii }} />
-                          <Text style={theme.text}>{item.altitude} mts.</Text>
-                        </View>
-                        <View style={theme.swipeCardFooter}>
-                          <Icon name="star" style={{ color: colors.coffii }} />
-                          <Text style={theme.text}>{item.avg_rating}</Text>
-                        </View>
-                        <View style={theme.swipeCardFooter}>
-                        <Icon name="ios-bonfire" style={{ color: colors.coffii }} />
-                          <Text style={theme.text}>{item.roast}</Text>
-                        </View>
-                      </CardItem>
-                    </Card>
-                  }
-                />
-              </View>
-            ) : null
-        }
-      </Container>
+      <View style={styles.container}>
+            <View style={theme.searchInputContainer}>
+              <Icon name="search" style={{ color: 'gray' }} />
+              <Input placeholder="Search by Coffee Brand" style={theme.customInput} />
+            </View>
+            {
+              this.state.loading ?
+                (
+                  <View style={{ flex: 1, alignItems: 'center' }}>
+                    <Spinner color='#FFCD30' />
+                  </View>
+                ) : null
+            }
+            {
+              this.state.coffees.length > 0 ?
+                (
+                  <View style={styles.container}>
+                    <DeckSwiper
+                      dataSource={this.state.coffees}
+                      renderItem={item =>
+                        <Card style={{ elevation: 3 }}>
+                          <CardItem>
+                            <Left>
+                              <Thumbnail source={{ uri: item.brand.name == "Cafe 504" ? 'http://cafe504.com/wp-content/uploads/2017/06/logo504cafe.png' : item.image.url }} />
+                              <Body>
+                                <Text style={theme.text}>{item.brand.name}</Text>
+                                <Text style={theme.text} note>{item.variety.description}</Text>
+                              </Body>
+                            </Left>
+                          </CardItem>
+                          <CardItem cardBody>
+                            <Image style={{ height: 300, flex: 1 }} source={{ uri: item.image.url }} />
+                          </CardItem>
+                          <CardItem style={theme.exploraSwipeCard}>
+                            <View style={theme.swipeCardFooter}>
+                              <Icon name="arrow-up" style={{ color: colors.coffii }} />
+                              <Text style={theme.text}>{item.altitude} mts.</Text>
+                            </View>
+                            <View style={theme.swipeCardFooter}>
+                              <Icon name="star" style={{ color: colors.coffii }} />
+                              <Text style={theme.text}>{item.avg_rating}</Text>
+                            </View>
+                            <View style={theme.swipeCardFooter}>
+                              <Icon name="ios-bonfire" style={{ color: colors.coffii }} />
+                              <Text style={theme.text}>{item.roast}</Text>
+                            </View>
+                          </CardItem>
+                        </Card>
+                      }
+                    />
+                  </View>
+                ) : null
+            }
+      </View>
     );
   }
 
@@ -185,8 +188,8 @@ class ExploraScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    flex: 15,
+    flexDirection: "column"
   },
   contentContainer: {
     paddingTop: 5,
