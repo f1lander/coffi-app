@@ -40,13 +40,13 @@ const RootStackNavigator = StackNavigator(
 			},
 			headerBackTitleStyle: {
 				fontWeight: 'normal',
-				backgroundColor: 'transparent',
+				backgroundColor: Colors.secondary,
 				fontFamily: 'nunito-black',
 				color: Colors.primary,
 				paddingRight: 15,
 				paddingLeft: 15,
 			},
-			headerTintColor: '#fff'
+			headerTintColor: Colors.primary
 		}),
 	}
 );

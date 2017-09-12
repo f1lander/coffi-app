@@ -91,7 +91,7 @@ class ExploraScreen extends React.Component {
                           </Body>
                         </Left>
                       </CardItem>
-                      <CardItem cardBody button onPress={() => this.handlePressCoffee(data.id)}>
+                      <CardItem cardBody button onPress={() => this.handlePressCoffee(item.id)}>
                         <Image style={{ height: 300, flex: 1 }} source={{ uri: item.image.url }} />
                       </CardItem>
                       <CardItem style={theme.exploraSwipeCard}>

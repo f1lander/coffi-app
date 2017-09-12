@@ -25,6 +25,10 @@ import {
 
 
 class CoffeeRequestScreen extends React.Component {
+    static navigationOptions = {
+        title: "Add Coffee",
+      };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -46,7 +50,7 @@ class CoffeeRequestScreen extends React.Component {
         const { state } = this;
 
         const { coffee } = state;
-        coffee.image = params.base64;
+        coffee.image = params.base64 || null;
 
         const postData = {
             review: state.review,
@@ -93,7 +97,7 @@ class CoffeeRequestScreen extends React.Component {
                                 It looks we were not able to find a coffee in our database, would you like to submit a request and review for this coffee to be added?
                         </Text>
                         </Item>
-                        <Item>
+                        <Item style={{paddingTop: 10, paddingBottom: 10}}>
                             <Image style={{ height: 200, width: null, flex: 1, resizeMode: 'contain', }}
                                 source={{ uri: params.uri, scale: 3 }} />
                         </Item>
@@ -102,13 +106,13 @@ class CoffeeRequestScreen extends React.Component {
                             <Input
                                 floatingLabel={true}
                                 onChangeText={(brandName) => {
-                                    const state = this.state;
-                                    state.coffee.brand.name = brandName;
-                                    this.setState(state);
+                                    let { coffee } = this.state;
+                                    coffee.brand.name = brandName;
+                                    this.setState({coffee});
                                 }}
                                 numberOfLines={1}
                                 value={this.state.coffeeName}
-                                style={{ margin: 15 }}
+                                style={{ margin: 10 }}
                                 placeholder="Brand Name" />
                         </Item>
 
@@ -123,7 +127,7 @@ class CoffeeRequestScreen extends React.Component {
                                 }}
                                 numberOfLines={1}
                                 value={this.state.altitude}
-                                style={{ margin: 15 }}
+                                style={{ margin: 10 }}
                                 placeholder="Altitude" />
                         </Item>
                         {/* 
@@ -135,17 +139,19 @@ class CoffeeRequestScreen extends React.Component {
                         >
                         </Picker> */}
 
-                        <Stars
-                            half={true}
-                            rating={0}
-                            update={(val) => { this.onRatingChange(val) }}
-                            spacing={4}
-                            starSize={40}
-                            tintColor={'#FFCD30'}
-                            style={{ margin: 15 }}
-                            count={5}
-                            {...StarsAssets.largeCoffeeBeans}
-                        />
+                        <Item underline style={{paddingTop: 10, paddingBottom: 10, paddingRight: 10, justifyContent: 'space-between'}}>
+                            <Text style={{ margin: 10, opacity: 0.7 }}>Personal Rating</Text>
+                            <Stars
+                                half={true}
+                                rating={0}
+                                update={(val) => { this.onRatingChange(val) }}
+                                spacing={4}
+                                starSize={25}
+                                tintColor={'#FFCD30'}
+                                count={5}
+                                {...StarsAssets.smallCoffeeBeans}
+                            />
+                        </Item>
 
                         <Item underline>
                             <Input
@@ -157,7 +163,7 @@ class CoffeeRequestScreen extends React.Component {
                                 }}
                                 numberOfLines={6}
                                 value={this.state.review.comment}
-                                style={{ margin: 15 }}
+                                style={{ margin: 10 }}
                                 placeholder="Comment" />
                         </Item>
                     </Form>
