@@ -39,12 +39,11 @@ import { observer, inject } from "mobx-react";
 
 import { Icon } from "@expo/vector-icons";
 import LogOut from "../components/LogOut";
-import FollowButtom from "../components/FollowButtton";
+import FollowButton from "../components/FollowButtton";
 import theme from "../constants/Theme";
 import api from "../api";
 
 const ReviewItem = ({ review }) => {
-	console.log(`Review => ${JSON.stringify(review)}`);
 	return (
 		<ListItem key={review.id}>
 			<Card>
@@ -74,18 +73,29 @@ const ReviewItem = ({ review }) => {
 };
 
 @inject("authenticationStore")
+@inject("userStore")
 @observer
 class ProfileScreen extends React.Component {
 
 	constructor(props) {
 		super(props);
 
+		let owner = "me";
+		if (this.props.navigation
+			&& this.props.navigation.state
+			&& this.props.navigation.state.params
+			&& this.props.navigation.state.params.owner) {
+
+			owner = this.props.navigation.state.params.owner
+		}
+
 		this.state = {
 			followers: [],
 			following: [],
-			avatar: ApiUtils.getAvatarUrl(this.props.owner || "me", "m"),
+			avatar: ApiUtils.getAvatarUrl(owner, "m"),
 			reviews: [],
-			userProfile: {}
+			userProfile: {},
+			owner,
 		};
 	}
 
@@ -94,66 +104,74 @@ class ProfileScreen extends React.Component {
 	};
 
 	componentDidMount() {
-		this.props.Api.getProfile(this.props.owner || "me")
+		this.props.Api.getProfile(this.state.owner)
 			.then((response) => {
+				console.log("FINISHED GETTING PROFILE");
 				const userProfile = response.data;
-				const state = this.state || {};
+				this.props.userStore.setCurrentUser(userProfile);
+
+				const state = this.state;
 				state.userProfile = userProfile;
+				console.log(`OWNER => ${JSON.stringify(this.state.userProfile)}`);
 				this.setState(state);
 			})
-			.catch((err) => {
-				console.error(err);
-			});
+			.catch((err) => console.error(err));
 
-		this.props.Api.getFollowersForUser(this.props.owner || "me")
+		this.props.Api.getFollowersForUser(this.state.owner)
 			.then((response) => {
 				const followers = response.data;
 				const state = this.state || {};
 				state.followers = followers;
 				this.setState(state);
 			})
-			.catch((err) => {
-				console.log(err);
-			});
+			.catch((err) => console.error(err));
 
-		this.props.Api.getFollowingForUser(this.props.owner || "me")
+		this.props.Api.getFollowingForUser(this.state.owner)
 			.then((response) => {
 				const following = response.data;
-				const state = this.state || {};
+				const state = this.state;
 				state.following = following;
 				this.setState(state);
 			})
-			.catch((err) => { });
+			.catch((err) => console.error(err));
 
-		this.props.Api.getReviewsForUser(this.props.owner || "me")
+		this.props.Api.getReviewsForUser(this.state.owner)
 			.then((response) => {
 				const reviews = response.data;
-				console.log(JSON.stringify(reviews));
 				const state = this.state || {};
 				state.reviews = reviews;
 				this.setState(state);
 			})
 			.catch((err) => {
-				console.log(err);
+				console.error(err);
 			});
 	}
 
+	showButtonsIfReady() {
+		if (this.state.owner === "me") {
+			return (<LogOut />);
+		} else if (this.state.userProfile.id) {
+			return (<FollowButton />);
+		}
+
+		return null;
+	}
+
 	render() {
-		console.log(this.state.avatar);
 		return (
 			<Container style={{ backgroundColor: "white" }}>
 				<Grid>
 					<Row style={{ alignItems: "center" }} size={1}>
-						<Image style={theme.avatarImage} source={{uri: ApiUtils.getAvatarUrl(this.state.userProfile.id)}} />
+						<Image style={theme.avatarImage} source={{ uri: ApiUtils.getAvatarUrl(this.state.userProfile.id) }} />
 						<View style={{ flexDirection: "column", justifyContent: "flex-start", alignItems: "center" }}>
-							<Text style={[theme.platoCoinText]}>{this.state.userProfile.fullname}</Text>
-							<Text style={[theme.platoCoinText, { fontSize: 12, fontStyle: "normal" }]}>SPS, Honduras</Text>
+							<Text style={[theme.platoCoinText]}>{this.state.userProfile.fullname || this.state.userProfile.username}</Text>
+							{/* <Text style={[theme.platoCoinText, { fontSize: 12, fontStyle: "normal" }]}>SPS, Honduras</Text> */}
 						</View>
 					</Row>
 
 					<Row style={{ paddingHorizontal: 5, height: 70 }}>
 						{
-							!this.props.owner ?   < LogOut /> : <FollowButtom follower={"me"} following={this.props.owner} />
+							this.showButtonsIfReady()
 						}
 					</Row>
 
@@ -167,7 +185,7 @@ class ProfileScreen extends React.Component {
 							<Text style={styles.subText}>Following</Text>
 						</Col>
 						<Col style={styles.container}>
-							<Text style={styles.text}>10</Text>
+							<Text style={styles.text}>{this.state.reviews.length}</Text>
 							<Text style={styles.subText}>Reviews</Text>
 						</Col>
 					</Row>
