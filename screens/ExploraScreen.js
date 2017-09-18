@@ -101,7 +101,7 @@ class ExploraScreen extends React.Component {
                         </View>
                         <View style={theme.swipeCardFooter}>
                           <Icon name="star" style={{ color: colors.coffii }} />
-                          <Text style={theme.text}>{item.avg_rating}</Text>
+                          <Text style={theme.text}>{item.avg_rating.toFixed(1) }</Text>
                         </View>
                         <View style={theme.swipeCardFooter}>
                         <Icon name="ios-bonfire" style={{ color: colors.coffii }} />

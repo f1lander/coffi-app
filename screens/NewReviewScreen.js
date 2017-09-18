@@ -20,7 +20,7 @@ export class ScanCoffeeScreen extends React.Component {
     const { navigate } = this.props.navigation;
     //navigate('Coffee', { id: "59ae0b46ce8f3d00112af083"});
 
-    navigate('CoffeeRequest', {});
+    //navigate('CoffeeRequest', {});
   }
 
 

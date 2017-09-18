@@ -62,7 +62,7 @@ class CoffeeScreen extends React.Component {
 
   showProfile(userId) {
     const { navigate } = this.props.navigation;
-    navigate("UserProfile", { owner: id });
+    navigate("UserProfile", { owner: userId });
   }
 
   componentDidMount() {
