@@ -5,6 +5,9 @@ import { StackNavigator } from 'react-navigation';
 import Colors from '../constants/Colors';
 
 import MainTabNavigator from './MainTabNavigator';
+import ProfileScreen from "../screens/ProfileScreen";
+import CoffeeScreen from '../screens/CoffeeScreen';
+import CoffeeRequestScreen from "../screens/CoffeeRequestScreen";
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
 const RootStackNavigator = StackNavigator(
@@ -12,8 +15,16 @@ const RootStackNavigator = StackNavigator(
 		Main: {
 			screen: MainTabNavigator,
 			path: '/tabs'
+		},
+		Coffee: {
+			screen: CoffeeScreen
+		},
+		CoffeeRequest: {
+			screen: CoffeeRequestScreen,
+		},
+		UserProfile: {
+			screen: ProfileScreen,
 		}
-		
 	},
 	{
 		navigationOptions: () => ({
@@ -23,19 +34,19 @@ const RootStackNavigator = StackNavigator(
 			},
 			headerTitleStyle: {
 				fontWeight: 'normal',
-				backgroundColor: Colors.tintColor,
-				fontFamily: 'annie',
-				color: '#fff'
+				backgroundColor: 'transparent',
+				fontFamily: 'nunito-black',
+				color: Colors.primary
 			},
 			headerBackTitleStyle: {
 				fontWeight: 'normal',
-				backgroundColor: Colors.tintColor,
-				fontFamily: 'annie',
-				color: '#fff',
+				backgroundColor: Colors.secondary,
+				fontFamily: 'nunito-black',
+				color: Colors.primary,
 				paddingRight: 15,
 				paddingLeft: 15,
 			},
-			headerTintColor: '#fff'
+			headerTintColor: Colors.primary
 		}),
 	}
 );
@@ -50,7 +61,7 @@ export default class RootNavigator extends React.Component {
 	}
 
 	render() {
-		return <RootStackNavigator />;
+		return <RootStackNavigator {...this.props}/>;
 	}
 
 	_registerForPushNotifications() {

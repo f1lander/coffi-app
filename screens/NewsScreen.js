@@ -13,37 +13,39 @@ import Stars from 'react-native-stars';
 
 import { MonoText } from '../components/StyledText';
 
-import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
+import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right, Spinner } from 'native-base';
 
-export default class NewsScreen extends React.Component {
+import { apiConnector }  from "../navigation/Connectors";
+
+import utils from '../api/utils'
+
+import moment from 'moment';
+
+class NewsScreen extends React.Component {
   constructor(props) {
+    console.log("News");
     super(props);
     this.state = {
-      reviews: [
-        {
-          id: 1,
-          username: "filander",
-          comment: "Muy Buen cafe",
-          location: "San Pedro Sula",
-          coffeName: "Cafe 504",
-          rate: 4.5,
-          avatarUrl: "https://placeimg.com/100/100/nature",
-          imageUrl: "https://placeimg.com/640/480/nature",
-          timeAgo: "11h ago"
-        },
-        {
-          id: 2,
-          username: "filander",
-          comment: "No muy bueno",
-          location: "San Pedro Sula",
-          coffeName: "Cafe ORO",
-          rate: 1.5,
-          avatarUrl: "https://placeimg.com/100/100/nature",
-          imageUrl: "https://placeimg.com/640/480/nature",
-          timeAgo: "11h ago"
-        }
-      ]
+      loading: true,
+      reviews: []
     }
+  }
+
+  componentDidMount(){
+    this.props.Api.getTimeline().then(response => {
+      if(response.ok){
+        this.setState({
+          reviews: response.data,
+          loading: false,
+        })
+      }else{
+        this.setState({
+          error: true,
+          reviews: [],
+          loading: false,
+        }) 
+      }
+    });
   }
 
   static navigationOptions = {
@@ -57,6 +59,7 @@ export default class NewsScreen extends React.Component {
         spacing={4}
         starSize={10}
         backingColor='#fafafa'
+        disabled={true}
         count={5}
         fullStar={require('../node_modules/react-native-stars/example-images/starFilled.png')}
         emptyStar={require('../node_modules/react-native-stars/example-images/starEmpty.png')}
@@ -64,35 +67,47 @@ export default class NewsScreen extends React.Component {
     )
   }
 
-  _renderCard(data){
+  handlePressUser(id){
+    const { navigate } = this.props.navigation;
+    navigate("UserProfile", { owner: id });
+  }
+
+  handlePressCoffee(id){
+    const { navigate } = this.props.navigation;
+    navigate('Coffee', { id: id});
+  }
+
+  _renderCard(data) {
     return (
-      <Card>
+      <Card key={data.id}>
         <CardItem>
           <Left>
-            <Thumbnail source={{ uri: data.avatarUrl }} />
+            <TouchableOpacity onPress={() => this.handlePressUser(data.userId)}>
+              <Thumbnail source={{ uri: utils.getAvatarUrl(data.userId)}} />
+            </TouchableOpacity>
             <Body>
-              <Text>{ data.username }</Text>
-              <Text note>{ data.location }</Text>
+              <Text>{data.user.fullname || data.user.username}</Text>
+              <Text note>{data.user.location || ''}</Text>
             </Body>
           </Left>
         </CardItem>
         <CardItem>
           <View style={{ flex: 1 }}>
-            <Text>{ data.comment }</Text>
+            <Text>{data.comment}</Text>
           </View>
         </CardItem>
         <CardItem cardBody>
-          <Image source={{ uri: data.imageUrl }} style={{ height: 200, width: null, flex: 1 }} />
+          <Image source={{ uri: data.image && data.image.url ||  utils.getCoffeeImageUrl(data.coffeeId)}} style={{ height: 200, width: null, flex: 1 }} />
         </CardItem>
-        <CardItem>
+        <CardItem button onPress={() => this.handlePressCoffee(data.coffeeId)}>
           <Left>
-            {this._renderStar(data.rate)}
+            {this._renderStar(data.rating)}
           </Left>
           <Body>
-            <Text>{ data.coffeName }</Text>
+            <Text>{data.coffee.brand.name}</Text>
           </Body>
           <Right>
-            <Text>{ data.timeAgo }</Text>
+            <Text>{data.updatedAt && moment(data.updatedAt).fromNow()}</Text>
           </Right>
         </CardItem>
       </Card>
@@ -107,25 +122,20 @@ export default class NewsScreen extends React.Component {
           contentContainerStyle={styles.contentContainer}>
           <Content>
             {
+              this.state.loading ?
+              (
+                <View style={{flex:1, alignItems:'center'}}>
+                      <Spinner color='#FFCD30' />
+                </View>
+              ): null
+            }
+            {
               this.state.reviews.map(x => {
                 return this._renderCard(x);
               })
             }
           </Content>
         </ScrollView>
-
-        <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>
-            This is a tab bar. You can edit it in:
-          </Text>
-
-          <View
-            style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <MonoText style={styles.codeHighlightText}>
-              navigation/MainTabNavigator.js
-            </MonoText>
-          </View>
-        </View>
       </View>
     );
   }
@@ -242,3 +252,5 @@ const styles = StyleSheet.create({
     color: '#2e78b7',
   },
 });
+
+export default apiConnector(NewsScreen);

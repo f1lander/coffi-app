@@ -1,137 +1,226 @@
-import React from 'react';
-import { ScrollView, StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
+import React from "react";
+import { ScrollView, StyleSheet, View, Image, TouchableOpacity, AsyncStorage } from "react-native";
 
-import { MonoText, AnnieText } from '../components/StyledText';
-import { inject } from "mobx-react";
-import { Toast, Form, Item, Input, Button, Picker } from "native-base";
-import { Icon } from '@expo/vector-icons';
-import LogOut from '../components/LogOut';
-import theme from '../constants/Theme';
-import api from '../api';
+import { MonoText, AnnieText } from "../components/StyledText";
 
+import { apiConnector } from "../navigation/Connectors";
+
+import moment from "moment";
+
+import Stars from 'react-native-stars';
+
+import StarsAssets from '../assets/images/stars';
+
+import ApiUtils from "../api/utils";
+
+import {
+	Toast,
+	Form,
+	Item,
+	Input,
+	Button,
+	Picker,
+	Content,
+	Container,
+	Text,
+	List,
+	ListItem,
+	Card,
+	CardItem
+} from "native-base";
+
+import {
+	Grid,
+	Col,
+	Row,
+} from "react-native-easy-grid";
+
+import { observer, inject } from "mobx-react";
+
+import { Icon } from "@expo/vector-icons";
+import LogOut from "../components/LogOut";
+import FollowButton from "../components/FollowButtton";
+import theme from "../constants/Theme";
+import api from "../api";
+
+const ReviewItem = ({ review }) => {
+	return (
+		<ListItem key={review.id}>
+			<Card>
+				<CardItem style={{ flexDirection: "row", flex: 1 }}>
+					<Image style={[theme.avatarImage, { width: 70, height: 70 }]} source={require("../assets/images/avatar.png")} />
+					<View>
+						<Text>{review.coffee.brand.name}</Text>
+						<Text>{review.method ? review.method.name : ""}</Text>
+					</View>
+				</CardItem>
+
+				<CardItem footer style={{ flex: 1 }}>
+					<Text style={{ flex: 1 }}>{moment(review.updatedAt).fromNow()}</Text>
+					<Stars
+						style={{ alignSelf: "flex-end" }}
+						half={true}
+						disabled={true}
+						value={review.rating}
+						spacing={4}
+						starSize={20}
+						count={5}
+						{...StarsAssets.smallCoffeeBeans} />
+				</CardItem>
+			</Card>
+		</ListItem>
+	);
+};
+
+@inject("authenticationStore")
 @inject("userStore")
-export default class MiCuentaScreen extends React.Component {
-	constructor(props){
+@observer
+class ProfileScreen extends React.Component {
+
+	constructor(props) {
 		super(props);
 
+		let owner = "me";
+		if (this.props.navigation
+			&& this.props.navigation.state
+			&& this.props.navigation.state.params
+			&& this.props.navigation.state.params.owner) {
+
+			owner = this.props.navigation.state.params.owner
+		}
+
 		this.state = {
-			places: [],
-			user: this.props.userStore
+			followers: [],
+			following: [],
+			avatar: ApiUtils.getAvatarUrl(owner, "m"),
+			reviews: [],
+			userProfile: {},
+			owner,
 		};
 	}
 
-
 	static navigationOptions = {
-		title: 'Mi Cuenta',
+		title: "Profile",
 	};
 
-	componentWillMount(){
-		api.get('/places').then((response)=>{
-			if(response.problem)
-				Toast.show({
-					text: 'Error en la conexión ('+ response.problem +')',
-					position: 'bottom',
-					type: 'warning',
-					duration: 5000
-				});
-			else
-				this.setState({ places: response.data });
-		});
+	componentDidMount() {
+		this.props.Api.getProfile(this.state.owner)
+			.then((response) => {
+				console.log("FINISHED GETTING PROFILE");
+				const userProfile = response.data;
+				this.props.userStore.setCurrentUser(userProfile);
+
+				const state = this.state;
+				state.userProfile = userProfile;
+				console.log(`OWNER => ${JSON.stringify(this.state.userProfile)}`);
+				this.setState(state);
+			})
+			.catch((err) => console.error(err));
+
+		this.props.Api.getFollowersForUser(this.state.owner)
+			.then((response) => {
+				const followers = response.data;
+				const state = this.state || {};
+				state.followers = followers;
+				this.setState(state);
+			})
+			.catch((err) => console.error(err));
+
+		this.props.Api.getFollowingForUser(this.state.owner)
+			.then((response) => {
+				const following = response.data;
+				const state = this.state;
+				state.following = following;
+				this.setState(state);
+			})
+			.catch((err) => console.error(err));
+
+		this.props.Api.getReviewsForUser(this.state.owner)
+			.then((response) => {
+				const reviews = response.data;
+				const state = this.state || {};
+				state.reviews = reviews;
+				this.setState(state);
+			})
+			.catch((err) => {
+				console.error(err);
+			});
 	}
 
-	handleValueChange(isValid, values, validationResults, postSubmit = null, modalNavigator = null){
-		if(isValid === true){
-			api.get('/profile/'+this.props.userStore.userid, values).then((response)=>{
-				if(response.problem){
-					Toast.show({
-						text: 'Error en la conexión ('+ response.problem +')',
-						position: 'bottom',
-						type: 'warning',
-						duration: 5000
-					});
-
-					postSubmit();
-				}else{
-					Toast.show({
-						text: 'Se guardo el perfil con exito!',
-						position: 'bottom',
-						type: 'success',
-						duration: 5000
-					});
-
-					postSubmit();
-				}
-			});
+	showButtonsIfReady() {
+		if (this.state.owner === "me") {
+			return (<LogOut />);
+		} else if (this.state.userProfile.id) {
+			return (<FollowButton />);
 		}
+
+		return null;
 	}
 
 	render() {
 		return (
-			<ScrollView style={styles.container}>
-				<View style={{justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center'}}>
-					<Image style={theme.avatarImage} source={this.props.userStore.avatar ? {uri: this.props.userStore.avatar} : require('../assets/images/avatar.png')} />
-					<View style={{justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center', flex: 1}}>
-						<Image source={require('../assets/images/coin.png')} style={{ width: 40, height: 40 }}/>
-						<Text style={theme.platoCoinText}> L.{this.props.userStore.credit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
-					</View>
-					<TouchableOpacity>
-						<View style={{ backgroundColor:'#FFCE60', marginLeft: 10, marginRight: 10, padding: 8, paddingLeft: 14, paddingRight: 14, borderRadius: 18 }}>
-							<Text style={{ color: '#F77B5A', fontWeight: 'bold', borderRadius: 18 }}>COMPRAR</Text>
+			<Container style={{ backgroundColor: "white" }}>
+				<Grid>
+					<Row style={{ alignItems: "center" }} size={1}>
+						<Image style={theme.avatarImage} source={{ uri: ApiUtils.getAvatarUrl(this.state.userProfile.id) }} />
+						<View style={{ flexDirection: "column", justifyContent: "flex-start", alignItems: "center" }}>
+							<Text style={[theme.platoCoinText]}>{this.state.userProfile.fullname || this.state.userProfile.username}</Text>
+							{/* <Text style={[theme.platoCoinText, { fontSize: 12, fontStyle: "normal" }]}>SPS, Honduras</Text> */}
 						</View>
-					</TouchableOpacity>
-				</View>
-				<View>
-					<Form>
-						<Item>
-							<Image source={require('../assets/images/color/user.png')} style={theme.formImage}/>
-							<Input placeholder="Nombre" defaultValue={this.state.user.name}/>
-						</Item>
-						<Item>
-							<Image source={require('../assets/images/color/email.png')} style={theme.formImage}/>
-							<Input placeholder="Correo Electrónico" defaultValue={this.state.user.email}/>
-						</Item>
-						<Item>
-							<Image source={require('../assets/images/color/phone.png')} style={theme.formImage}/>
-							<Input placeholder="Telefono" defaultValue={this.state.user.phone}/>
-						</Item>
-						<Item>
-							<Image source={require('../assets/images/color/place.png')} style={theme.formImage}/>
-							<Picker
-								iosHeader="Lugar de entrega"
-								selectedValue={this.state.user.place}
-								onValueChange={(value) => this.setState({ user : { ...this.state.user, place: value } })}
-								mode="dropdown" 
-								style={{paddingLeft: 5}}>
-								{this.state.places.map((item, key)=>{
-									return(
-										<Picker.Item label={item.nombre} value={item.id} key={key}/>
-									);
-								})}
-							</Picker>
-						</Item>
+					</Row>
 
-						<View style={{margin:10, marginTop: 20}}>
-							<TouchableOpacity>
-								<View style={theme.btnWrap}>
-									<Image source={require('../assets/images/save.png')} style={theme.btnImage}/>
-									<Text style={theme.btnText}>GUARDAR</Text>
-								</View>
-							</TouchableOpacity>
+					<Row style={{ paddingHorizontal: 5, height: 70 }}>
+						{
+							this.showButtonsIfReady()
+						}
+					</Row>
 
-							<LogOut />
-						</View>
-
-					</Form>
-				</View>
-			</ScrollView>
+					<Row style={{ height: 50 }}>
+						<Col style={styles.container}>
+							<Text style={styles.text}>{this.state.followers.length}</Text>
+							<Text style={styles.subText}>Followers</Text>
+						</Col>
+						<Col style={styles.container}>
+							<Text style={styles.text}>{this.state.following.length}</Text>
+							<Text style={styles.subText}>Following</Text>
+						</Col>
+						<Col style={styles.container}>
+							<Text style={styles.text}>{this.state.reviews.length}</Text>
+							<Text style={styles.subText}>Reviews</Text>
+						</Col>
+					</Row>
+					<Row size={2}>
+						<List
+							dataArray={this.state.reviews}
+							style={{ flex: 1 }}
+							renderRow={(review) => <ReviewItem review={review} />}>
+							<ListItem itemHeader first>
+								<Text>Recent Reviews</Text>
+							</ListItem>
+						</List>
+					</Row>
+				</Grid>
+			</Container >
 		);
 	}
 }
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
-		paddingTop: 15,
-		backgroundColor: '#fff',
+		marginTop: 10,
+		backgroundColor: 'lightgrey',
+		borderWidth: StyleSheet.hairlineWidth,
+	},
+
+	text: {
+		textAlign: "center",
+		fontWeight: "bold",
+		fontSize: 18
+	},
+	subText: {
+		textAlign: "center",
+		fontSize: 12
 	}
 });
+
+export default apiConnector(ProfileScreen);

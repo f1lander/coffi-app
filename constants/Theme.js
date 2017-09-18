@@ -1,69 +1,94 @@
 import { Platform, StyleSheet, Dimensions } from 'react-native';
 
-var {height, width} = Dimensions.get('window');
+import colors from './Colors'
+
+var { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+
 	container: {
 		flex: 1,
-		backgroundColor: '#fff',
+		backgroundColor: 'red',
 	},
 	statusBarUnderlay: {
 		height: 24,
 		backgroundColor: 'rgba(0,0,0,0.2)',
 	},
-	'view' : {
+	exploraSwipeCard: {
+		flex: 1,
+		flexDirection:
+		'row',
+		justifyContent:
+		'space-between',
+		alignItems: 'center'
+	},
+	'view': {
 		flex: 1,
 		flexDirection: 'column',
 		justifyContent: 'space-between',
 		alignItems: 'center'
 	},
-	'fullColorView':{
+	'fullColorView': {
 		backgroundColor: "#FF9318",
-		flex:1,
+		flex: 1,
 		width: width,
 		alignItems: 'center',
 		justifyContent: 'center',
 		padding: 10
 	},
 	text: {
-		fontFamily: 'annie',
-		color: '#fff',
-		fontSize: 26,
-		backgroundColor: 'transparent',
-		textAlign: 'center'
+		fontFamily: 'nunito-regular',
+	},
+	swipeCardFooter: {
+		flex: 1,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+
 	},
 	subtext: {
 		color: '#fff',
-		fontFamily: 'annie',
+		fontFamily: 'space-mono',
 		fontSize: 16,
 		textAlign: 'center',
 	},
-	'formImage':{
+	'formImage': {
 		width: 32,
 		height: 32,
 		marginRight: 10
 	},
 
+	// custom input
+	customInput: {
+		fontFamily: 'nunito-light',
+		height: 40,
+	},
+	//Search container for type buttons
+	searchInputContainer: {
+		flex: 1,
+		flexDirection: 'row',
+		alignItems: 'center'
+	},
 	// WELCOME
 	welcomeSlide: {
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: '#FF9318',
+		backgroundColor: '#FFBA08',
 		padding: 20,
 	},
 	welcomeImage: {
-		width: 150, 
-		height: 150, 
+		width: 150,
+		height: 150,
 		marginBottom: 10
 	},
 
 	// DAYS
-	'dayView' : {
+	'dayView': {
 		flex: 1,
 		flexDirection: 'column',
 	},
-	'dayImage' : {
+	'dayImage': {
 		flex: 1,
 		resizeMode: 'cover',
 		width: width,
@@ -72,16 +97,17 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center'
 	},
-	'dayImageIcon' : {
+	'dayImageIcon': {
 		resizeMode: 'contain',
 		width: width - 20,
-		height: (width/2) - 20
+		height: (width / 2) - 20
 	},
-	dayWelcome: { 
-		fontSize: 32, 
-		color: '#fff', 
-		backgroundColor: 'transparent', 
-		textAlign: 'center' 
+	welcomeTitle: {
+		fontSize: 32,
+		color: '#fff',
+		backgroundColor: 'transparent',
+		textAlign: 'center',
+		fontFamily: 'nunito-black'
 	},
 
 	// PLATOS
@@ -90,18 +116,18 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		flexWrap: 'wrap',
 	},
-	'platoView':{
-		width: (width/2) - 10,
+	'platoView': {
+		width: (width / 2) - 10,
 		alignItems: 'center',
 		marginBottom: 20
 	},
-	'platoImage':{
-		width: (width/3.4),
-		height: (width/3.4),
-		borderRadius: ((width/3.4))/2
+	'platoImage': {
+		width: (width / 3.4),
+		height: (width / 3.4),
+		borderRadius: ((width / 3.4)) / 2
 	},
-	'platoTitle' : {
-		color: '#fff',
+	'platoTitle': {
+		color: '#78441D',
 		backgroundColor: 'transparent',
 		fontFamily: 'annie',
 		fontSize: 16,
@@ -110,7 +136,7 @@ const styles = StyleSheet.create({
 	},
 
 	// MODAL DETAILS
-	'platoCoinBox':{
+	'platoCoinBox': {
 		padding: 5,
 		height: 52,
 		backgroundColor: '#FED56A',
@@ -119,7 +145,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		margin: 10
 	},
-	'platoCoinInner':{
+	'platoCoinInner': {
 		paddingLeft: 10,
 		paddingRight: 10,
 		height: 42,
@@ -137,15 +163,15 @@ const styles = StyleSheet.create({
 		fontSize: 18
 	},
 
-	'platoDescription':{
+	'platoDescription': {
 		color: '#eee',
 		backgroundColor: 'transparent',
 		fontSize: 14
 	},
-	'modalDetails' : {
+	'modalDetails': {
 		padding: 20
 	},
-	'modalImage' : {
+	'modalImage': {
 		flex: 1,
 		resizeMode: 'cover',
 		width: width,
@@ -154,7 +180,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-end'
 	},
 	'modalTitleBox': {
-		padding: 20,		
+		padding: 20,
 		backgroundColor: 'rgb(38,37,46)'
 	},
 	'modalTitle': {
@@ -162,7 +188,7 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		color: '#fff',
 	},
-	'btnWrap' : {
+	'btnWrap': {
 		backgroundColor: 'transparent',
 		backgroundColor: '#FED56A',
 		height: 42,
@@ -174,12 +200,12 @@ const styles = StyleSheet.create({
 		paddingRight: 20,
 		marginBottom: 5
 	},
-	'btnImage':{
-		width: 42, 
+	'btnImage': {
+		width: 42,
 		height: 42
 	},
-	'btnText':{
-		flex:1,
+	'btnText': {
+		flex: 1,
 		backgroundColor: 'transparent',
 		color: '#F77B5A',
 		fontWeight: 'bold',
@@ -201,11 +227,11 @@ const styles = StyleSheet.create({
 		width: 100,
 		height: 100
 	},
-	'avatarImage':{
-		width: 80,
-		height: 80,
+	'avatarImage': {
+		width: 150,
+		height: 150,
 		resizeMode: 'cover',
-		borderRadius: 40,
+		borderRadius: 75,
 		margin: 10,
 	},
 });
@@ -451,7 +477,7 @@ const styles = StyleSheet.create({
 // 		textAlign: 'center',
 // 		padding: 10
 // 	},
-	
+
 // 	// DETALLES
 // 	'modalDetails' : {
 // 		padding: 20

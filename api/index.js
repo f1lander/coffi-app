@@ -1,9 +1,11 @@
+import { AsyncStorage } from "react-native"
 
+export const BASE_URL = "https://cofi-api.herokuapp.com/api";
 
-const BASE_URL = 'http://localhost:3000/api/v1';
+const AUTH_FACEBOOK_CALLBACK_URL = "https://cofi-api.herokuapp.com/auth/facebook/callback";
 
 // a library to wrap and simplify api calls
-import apisauce from 'apisauce'
+import apisauce from "apisauce"
 
 // our "constructor"
 const create = (baseURL = BASE_URL) => {
@@ -18,7 +20,7 @@ const create = (baseURL = BASE_URL) => {
     baseURL,
     // here are some default headers
     headers: {
-      'Content-type' : 'application/json'
+      "Content-type": "application/json"
     },
     // 30 second timeout...
     timeout: 30000
@@ -26,30 +28,33 @@ const create = (baseURL = BASE_URL) => {
 
   // Force OpenWeather API Key on all requests
   // api.addRequestTransform((request) => {
-  //   request.params['APPID'] = '0e44183e8d1018fc92eb3307d885379c'
+  //   request.params["APPID"] = "0e44183e8d1018fc92eb3307d885379c"
   // })
 
-  // Wrap api's addMonitor to allow the calling code to attach
+  // Wrap api"s addMonitor to allow the calling code to attach
   // additional monitors in the future.  But only in __DEV__ and only
-  // if we've attached Reactotron to console (it isn't during unit tests).
-  
+  // if we"ve attached Reactotron to console (it isn"t during unit tests).
+
   /* if (__DEV__ && console.tron) {
     api.addMonitor(console.tron.apisauce)
   }*/
 
   api.addAsyncRequestTransform(request => async () => {
-	const accessToken = await AsyncStorage.getItem('token')
-	if(accessToken){
-		request.headers['Authorization'] = accessToken;
-	}
+    const accessToken = await AsyncStorage.getItem("@Coffii:token")
+    console.log(`This is the token => ${accessToken}`);
+    if (accessToken) {
+      request.headers["Authorization"] = accessToken;
+    }
   })
 
   api.addMonitor((response) => {
-    if(response.status === 401 &&
+    if (response.status === 401 &&
       response.data && response.data.error &&
-      response.data.error.code === 'INVALID_TOKEN'){
-		  console.log('Invalid token')
+      response.data.error.code === "INVALID_TOKEN") {
+      console.log("Invalid token")
     }
+
+    console.log(response);
   })
 
   // ------
@@ -60,85 +65,81 @@ const create = (baseURL = BASE_URL) => {
   // a thin wrapper of the api layer providing nicer feeling functions
   // rather than "get", "post" and friends.
   //
-  // I generally don't like wrapping the output at this level because
+  // I generally don"t like wrapping the output at this level because
   // sometimes specific actions need to be take on `403` or `401`, etc.
   //
-  // Since we can't hide from that, we embrace it by getting out of the
+  // Since we can"t hide from that, we embrace it by getting out of the
   // way at this level.
   //
 
+  const isFollowing = (follower, following) => api.get(`/users/${follower}/following/${following}`);
+
+  const follow = (userId) => api.post(`/users/${userId}/follow`);
+
+  const unfollow = (userId) => api.post(`/users/${userId}/unfollow`);
+
+  const submitCoffeeRequest = (data) => api.post(`/CoffeeRequests`, data);
+
+  const getProfile = (userId) => api.get(`/users/${userId}`);
+
+  const getReviewsForUser = (userId) => api.get(`/users/${userId}/reviews`);
+
+  const getFollowersForUser = (userId) => api.get(`/users/${userId}/followers`);
+
+  const getFollowingForUser = (userId) => api.get(`/users/${userId}/following`);
+
   const userLogin = (credentials) => api.post(`/users/login?include=user`, credentials)
 
-  const registerDevice = (data) => api.post('/users/register-device', data, {timeout: 50000})
+  const registerDevice = (data) => api.post("/users/register-device", data, { timeout: 50000 })
 
-  const userLogout = () => api.post('/users/logout')
+  const userLogout = () => api.post("/users/logout")
 
-  const userRegister = (data) => api.post('/users', data)
+  const userRegister = (data) => api.post("/users", data)
 
-  const updateProfile = (data) => api.patch('/users/me', data)
+  const updateProfile = (data) => api.patch("/users/me", data)
 
-  const resetPassword = (data) => api.post('/users/reset', data)
+  const resetPassword = (data) => api.post("/users/reset", data)
 
-  const getNotifications = () => api.get('/users/me/notifications')
+  const loginWithFacebook = (accessToken) => api.get(`${AUTH_FACEBOOK_CALLBACK_URL}?access_token=${accessToken}`)
 
-  const getNotificationById = (id) => api.get(`/users/me/notifications/${id}`)
+  const getCoffees = () => api.get('/coffees');
 
-  const getFriendsRequests = () => api.get('/users/friends-requests')
+  const getCoffeeById = (id) => api.get(`/coffees/${id}`);
 
-  const getUserProfile = (id = 'me') => api.get(`/users/${id}/profile`)
+  const getReviewsByCoffeeId = (id) => api.get(`/coffees/${id}/reviews`);
 
-  const searchUsers = (query) => api.get(`/users/search?query=${query}`)
+  const getMyReviewsByCoffeeId = (id) => api.get(`/coffees/${id}/my-reviews`);
 
-  const getUserFriends = (id = 'me') => api.get(`/users/${id}/list-friends`)
+  const sendCoffeeReview = (id, data) => api.post(`/coffees/${id}/send-review`, data);
 
-  const addFriendById = (id) => api.post(`/users/${id}/add-friend`)
+  const getPreparationsMethods = () => api.get('/methods')
 
-  const removeFriendById = (id) => api.post(`/users/${id}/unfriend`)
+  const searchCoffee = (data) => api.post('/coffees/search/', data)
 
-  const blockUserById = (id) => api.post(`/users/${id}/block`)
+  const getRelatedCoffees = (id) => api.get(`/coffees/${id}/related-coffees`)
 
-  const unblockUserById = (id) => api.post(`/users/${id}/unblock`)
+  const getFollowing = (id) => api.get(`/users/${id}/following`)
 
-  const checkFriendship = (id) => api.get(`/users/${id}/check-friendship`)
+  const getFollowers = (id) => api.get(`/users/${id}/followers`)
 
-  const getUserAvatar = (id, redirect=true, size=small) => api.get(`/users/${id}/avatar?s=${size}&redirect=${redirect ? 'true': 'false' }`)
+  const getTimeline = () => api.get('/users/timeline')
+  
+  
 
-  const setAlarm = (data) => api.post('/alarms', data)
-
-  const getFriendsAlarms = () => api.get('/alarms/friends-alarms')
-
-  const getAlarmById = (id) => api.get(`/alarms/${id}`)
-
-  const updateAlarmById = (id, data) => api.patch(`/alarms/${id}`, data)
-
-  const removeAlarmById = (id) => api.delete(`/alarms/${id}`)
-
-  const turnOffAlarmById = (id) => api.post(`/alarms/${id}/turn-off`)
-
-  const calcAlarmSignature = (id) => api.get(`/alarms/${id}/calc-signature`)
-
-  const sendVoiceNote = (data) => api.post('/alarms/send-voice-note', data)
-
-  const getCurrentAlarm = (userId = 'me') => api.get(`/users/${userId}/currentAlarm`)
-
-  const getVoiceNote = (alarmId, voiceNoteId) => api.get(`/alarms/${alarmId}/voicenotes/${voiceNoteId}`)
-
-  const getVoiceNotes = (alarmId, filter = {}) => api.get(`/alarms/${alarmId}/voicenotes?filter=${JSON.stringify({include: 'sender', ...filter})}`)
-
-  const markVoiceNoteAsListened = (alarmId, voiceNoteId) => api.post(`/alarms/${alarmId}/voicenotes/${voiceNoteId}/mark-as-listened`)
 
   // ------
   // STEP 3
   // ------
   //
   // Return back a collection of functions that we would consider our
-  // interface.  Most of the time it'll be just the list of all the
+  // interface.  Most of the time it"ll be just the list of all the
   // methods in step 2.
   //
-  // Notice we're not returning back the `api` created in step 1?  That's
+  // Notice we"re not returning back the `api` created in step 1?  That"s
   // because it is scoped privately.  This is one way to create truly
   // private scoped goodies in JavaScript.
   //
+
   return {
     // a list of the API functions from step 2
     userLogin,
@@ -147,33 +148,32 @@ const create = (baseURL = BASE_URL) => {
     userRegister,
     resetPassword,
     updateProfile,
-    getNotifications,
-    getNotificationById,
-    getFriendsRequests,
-    getFriendsAlarms,
-    getUserProfile,
-    searchUsers,
-    getUserFriends,
-    addFriendById,
-    removeFriendById,
-    blockUserById,
-    unblockUserById,
-    checkFriendship,
-    getUserAvatar,
-    setAlarm,
-    getAlarmById,
-    updateAlarmById,
-    removeAlarmById,
-    turnOffAlarmById,
-    calcAlarmSignature,
-    sendVoiceNote,
-    getCurrentAlarm,
-    getVoiceNotes,
-    markVoiceNoteAsListened
+    loginWithFacebook,
+    getReviewsByCoffeeId,
+    getMyReviewsByCoffeeId,
+    getCoffeeById,
+    sendCoffeeReview,
+    getPreparationsMethods,
+    searchCoffee,
+    getCoffees,
+    updateProfile,
+    loginWithFacebook,
+    getProfile,
+    getFollowersForUser,
+    getFollowingForUser,
+    getReviewsForUser,
+    submitCoffeeRequest,
+    getRelatedCoffees,
+    getFollowing,
+    getFollowers,
+    getTimeline,
+    isFollowing,
+    follow,
+    unfollow
   }
 }
 
-// let's return back our create method as the default.
+// let"s return back our create method as the default.
 export default {
   create
 }

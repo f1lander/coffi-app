@@ -1,19 +1,21 @@
 {
   "expo": {
-    "name": "cofi-app",
-    "description": "No description",
-    "slug": "cofi-app",
-    "privacy": "public",
+    "name": "coffii-app",
+    "description": "The best coffee-drinking experience in the world",
+    "slug": "coffii-app",
+    "privacy": "unlisted",
     "sdkVersion": "19.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
-    "icon": "./assets/icons/app-icon.png",
+    "icon": "./assets/icons/appicon.png",
+    "facebookScheme": "fb113119379370031",
     "notification": {
       "icon": "./assets/icons/notification-icon.png",
       "color": "#000000"
     },
     "loading": {
+      "backgroundColor": "#3c4858",
       "icon": "./assets/icons/loading-icon.png",
       "hideExponentText": false
     },
@@ -21,7 +23,11 @@
       "assetExts": ["ttf"]
     },
     "ios": {
+      "bundleIdentifier": "co.coffii.app",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "co.coffii.app"
     }
   }
 }

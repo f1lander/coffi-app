@@ -33,3 +33,15 @@ export class TicketText extends React.Component {
     );
   }
 }
+
+export class NunitoText extends React.Component {
+  render() {
+    const nunitoType = { fontFamily: `nunito-${this.props.subFontType}` }
+    return (
+      <Text
+        {...this.props}
+        style={[this.props.style, this.props.nunitoType]}
+      />
+    );
+  }
+}

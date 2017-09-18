@@ -1,9 +1,15 @@
-const tintColor = '#DA0021';
+const tintColor = '#FFFFFF';
+const primary = '#FFCD30';
+const secondary = '#3c4858';
+const coffii = '#D8971F';
 
 export default {
   tintColor,
-  tabIconDefault: 'rgba(255,255,255,0.6)',
-  tabIconSelected: '#fff',
+  primary,
+  coffii,
+  secondary,
+  tabIconDefault: '#78441D',
+  tabIconSelected: coffii,
   tabBar: tintColor,
   errorBackground: 'red',
   errorText: '#fff',

@@ -1,8 +1,8 @@
 {
-  "name": "cofi-app",
+  "name": "coffii-app",
   "version": "0.0.0",
-  "description": "Hello Expo!",
-  "author": null,
+  "description": "The best coffee-drinking experience in the world",
+  "author": "Coffii Inc.",
   "license": "",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -17,19 +17,32 @@
     "@expo/samples": "^2.0.2",
     "apisauce": "^0.14.0",
     "expo": "19.0.0",
+    "lodash": "^4.17.4",
     "mobx": "^3.2.2",
     "mobx-react": "^4.2.2",
+    "moment": "^2.18.1",
     "native-base": "^2.3.1",
     "react": "16.0.0-alpha.12",
     "react-native": "https://github.com/expo/react-native/archive/sdk-19.0.0.tar.gz",
     "react-native-app-intro": "^1.1.5",
     "react-native-camera": "^0.6.0",
+    "react-native-easy-grid": "^0.1.15",
+    "react-native-gifted-form": "^0.1.0",
+    "react-native-parallax-scroll-view": "^0.19.0",
     "react-native-share": "^1.0.20",
     "react-native-slider": "^0.10.0",
-    "react-native-stars": "^1.0.2",
+    "react-native-smart-picker": "^1.0.2",
+    "react-native-stars": "git+https://github.com/gaboelnuevo/react-native-stars.git",
+    "react-native-vector-icons": "^4.3.0",
     "react-navigation": "^1.0.0-beta.12"
   },
   "devDependencies": {
+    "babel-preset-expo": "^3.0.0",
+    "eslint": "^4.6.1",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.3.0",
     "jest-expo": "19.0.0"
   }
 }

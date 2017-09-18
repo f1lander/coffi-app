@@ -6,9 +6,12 @@ import { Provider } from 'mobx-react';
 import { Root } from "native-base";
 
 import RootNavigation from './navigation/RootNavigation';
+import AppRoot from './navigation/AppRoot';
 import LoginScreen from './screens/LoginScreen';
 import theme from './constants/Theme';
 import stores from "./store";
+
+import { Text } from 'react-native';
 
 export default class App extends React.Component {
 	state = {
@@ -31,7 +34,7 @@ export default class App extends React.Component {
 							{Platform.OS === 'ios' && <StatusBar barStyle="light-content" />}
 							{Platform.OS === 'android' &&
 							<View style={theme.statusBarUnderlay} />}
-							<LoginScreen />
+							<AppRoot/>
 						</View>
 					</Root>
 				</Provider>
@@ -44,36 +47,33 @@ export default class App extends React.Component {
 			await Promise.all([
 				Asset.loadAsync([
 					require('./assets/images/bg.jpg'),
-					require('./assets/images/plato.jpeg'),
+					
 					require('./assets/images/facebook.png'),
-					require('./assets/images/whatsapp.png'),
+					
 					require('./assets/images/coin.png'),
-					require('./assets/images/drink.png'),
+					
 					require('./assets/images/not.png'),
 					require('./assets/images/off.png'),
-					require('./assets/images/save.png'),
-					require('./assets/images/reserva.png'),
+					require('./assets/images/save.png'),					
 
 					require('./assets/images/avatar.png'),
 					require('./assets/images/color/user.png'),
 					require('./assets/images/color/email.png'),
 					require('./assets/images/color/phone.png'),
-					require('./assets/images/color/place.png'),
-
-					require('./assets/images/dias/day_0.png'),
-					require('./assets/images/dias/day_1.png'),
-					require('./assets/images/dias/day_2.png'),
-					require('./assets/images/dias/day_3.png'),
-					require('./assets/images/dias/day_4.png'),
-					require('./assets/images/dias/day_5.png'),
-					require('./assets/images/dias/day_6.png')
+					require('./assets/images/color/place.png')
 				]),
 				Font.loadAsync([
 					Ionicons.font,
-
+					{ 'Roboto': require('native-base/Fonts/Roboto.ttf') },
+					{ 'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf')},
 					{ 'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf') },
 					{ 'annie': require('./assets/fonts/Aniie.ttf') },
 					{ 'ticket': require('./assets/fonts/Ticketing.ttf') },
+					{ 'nunito-black': require('./assets/fonts/Nunito-Black.ttf') },
+					{ 'nunito-regular': require('./assets/fonts/Nunito-Regular.ttf') },
+					{ 'nunito-semibold': require('./assets/fonts/Nunito-SemiBold.ttf') },
+					{ 'nunito-light': require('./assets/fonts/Nunito-Light.ttf') },
+
 				]),
 			]);
 		} catch (e) {
@@ -83,6 +83,7 @@ export default class App extends React.Component {
 			);
 			console.log(e);
 		} finally {
+			console.log('loaded');
 			this.setState({ assetsAreLoaded: true });
 		}
 	}
