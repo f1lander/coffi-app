@@ -26,7 +26,7 @@ const tabProps = {
 @observer
 class FriendsScreen extends Component {
   static navigationOptions = {
-    title: 'Friends',
+    title: 'FRIENDS',
   };
 
   componentDidMount() {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { ScrollView, StyleSheet, View, Image, TouchableOpacity, AsyncStorage } from "react-native";
 
 import { MonoText, AnnieText } from "../components/StyledText";
@@ -24,6 +24,11 @@ import {
 	Container,
 	Text,
 	List,
+	Left,
+	Right,
+	Body,
+	Icon,
+	Switch,
 	ListItem,
 	Card,
 	CardItem
@@ -37,7 +42,7 @@ import {
 
 import { observer, inject } from "mobx-react";
 
-import { Icon } from "@expo/vector-icons";
+//import { Icon } from "@expo/vector-icons";
 import LogOut from "../components/LogOut";
 import FollowButton from "../components/FollowButtton";
 import theme from "../constants/Theme";
@@ -75,7 +80,7 @@ const ReviewItem = ({ review }) => {
 @inject("authenticationStore")
 @inject("userStore")
 @observer
-class ProfileScreen extends React.Component {
+class ProfileScreen extends Component {
 
 	constructor(props) {
 		super(props);
@@ -100,7 +105,8 @@ class ProfileScreen extends React.Component {
 	}
 
 	static navigationOptions = {
-		title: "Profile",
+		title: "PROFILE",
+		header: null
 	};
 
 	componentDidMount() {
@@ -157,49 +163,63 @@ class ProfileScreen extends React.Component {
 		return null;
 	}
 
+	navigate() {
+		const { navigate } = this.props.navigation;
+		navigate("SettingsProfile");
+	}
+
 	render() {
 		return (
-			<Container style={{ backgroundColor: "white" }}>
-				<Grid>
-					<Row style={{ alignItems: "center" }} size={1}>
-						<Image style={theme.avatarImage} source={{ uri: ApiUtils.getAvatarUrl(this.state.userProfile.id) }} />
-						<View style={{ flexDirection: "column", justifyContent: "flex-start", alignItems: "center" }}>
-							<Text style={[theme.platoCoinText]}>{this.state.userProfile.fullname || this.state.userProfile.username}</Text>
-							{/* <Text style={[theme.platoCoinText, { fontSize: 12, fontStyle: "normal" }]}>SPS, Honduras</Text> */}
-						</View>
-					</Row>
+			<Container style={theme.containerProfile}>
 
-					<Row style={{ paddingHorizontal: 5, height: 70 }}>
-						{
-							this.showButtonsIfReady()
-						}
-					</Row>
-
-					<Row style={{ height: 50 }}>
-						<Col style={styles.container}>
-							<Text style={styles.text}>{this.state.followers.length}</Text>
-							<Text style={styles.subText}>Followers</Text>
-						</Col>
-						<Col style={styles.container}>
-							<Text style={styles.text}>{this.state.following.length}</Text>
-							<Text style={styles.subText}>Following</Text>
-						</Col>
-						<Col style={styles.container}>
-							<Text style={styles.text}>{this.state.reviews.length}</Text>
-							<Text style={styles.subText}>Reviews</Text>
-						</Col>
-					</Row>
-					<Row size={2}>
-						<List
-							dataArray={this.state.reviews}
-							style={{ flex: 1 }}
-							renderRow={(review) => <ReviewItem review={review} />}>
-							<ListItem itemHeader first>
-								<Text>Recent Reviews</Text>
+				<View style={theme.headingProfile}>
+					<View style={theme.headingTitleBox}>
+						<Text style={theme.headingTitle}>Filander</Text>
+						<Text style={theme.headingSubtTitle}>Edit your profile</Text>
+					</View>
+					<View style={theme.avatarView}>
+						<Image style={theme.avatarImage} source={require("../assets/images/avatar.png")} />
+					</View>
+				</View>
+				<View style={theme.bodyProfile}>
+					<Content>
+						<List>
+							<ListItem onPress={()=> this.navigate() } style={{height:75}} icon>
+								<Left>
+									<Icon name="ios-settings-outline" />
+								</Left>
+								<Body>
+									<Text style={theme.bodyListItem}>Settings</Text>
+								</Body>
+							</ListItem>
+							<ListItem style={{height:75}} icon>
+								<Left>
+									<Icon name="ios-cafe-outline" />
+								</Left>
+								<Body>
+									<Text style={theme.bodyListItem}>Become a Coffiitributor</Text>
+								</Body>
+							</ListItem>
+							<ListItem style={{height:75}} onPress={() => this.showAlert()} icon>
+								<Left>
+									<Icon name="ios-star-outline" />
+								</Left>
+								<Body>
+									<Text style={theme.bodyListItem}>Give us feedback</Text>
+								</Body>
+							</ListItem>
+							<ListItem style={{height:75}} icon>
+								<Left>
+									<Icon name="ios-help-buoy-outline" />
+								</Left>
+								<Body>
+									<Text style={theme.bodyListItem}>Help</Text>
+								</Body>
 							</ListItem>
 						</List>
-					</Row>
-				</Grid>
+					</Content>
+				</View>
+
 			</Container >
 		);
 	}
@@ -222,5 +242,7 @@ const styles = StyleSheet.create({
 		fontSize: 12
 	}
 });
+
+
 
 export default apiConnector(ProfileScreen);

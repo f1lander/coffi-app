@@ -13,7 +13,7 @@ export class ScanCoffeeScreen extends React.Component {
   };
 
   static navigationOptions = {
-    title: 'Add Review',
+    title: 'SCAN',
   };
 
   componentDidMount() {

@@ -58,20 +58,25 @@ export default TabNavigator(
             name={iconName}
             size={32}
             style={{ marginBottom: -3 }}
-            color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+            color={focused ? Colors.primary : Colors.tabIconDefault}
           />
         );
       },
     }),
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
-    animationEnabled: true,
-    swipeEnabled: true,
+    animationEnabled: false,
+    swipeEnabled: false,
     tabBarOptions: {
-      showLabel: false,
+      showLabel: true,
+      activeTintColor:Colors.tabIconDefault,
+      labelStyle:{
+        fontFamily: 'nunito-black',
+      },
       style: {
         borderTopColor: 'rgba(0,0,0,0.1)',
         backgroundColor: Colors.tintColor
+        
       }
     }
   }

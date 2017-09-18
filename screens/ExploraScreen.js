@@ -24,7 +24,7 @@ import colors from '../constants/Colors'
 
 class ExploraScreen extends React.Component {
   static navigationOptions = {
-    title: "Explora",
+    title: "EXPLORA",
   };
 
   constructor(props) {

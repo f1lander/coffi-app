@@ -8,8 +8,57 @@ const styles = StyleSheet.create({
 
 	container: {
 		flex: 1,
-		backgroundColor: 'red',
+		backgroundColor: 'white',
 	},
+	// Profile
+	containerProfile: {
+		flex: 1,
+		flexDirection:'column',
+		backgroundColor: 'white',
+	},
+	headingProfile:{
+		flex:1,		
+		justifyContent:'space-around',		
+		flexDirection:'row',
+		alignItems:'center',
+		paddingHorizontal:15
+	},
+	headingSettings:{		
+		flex:0.5,
+		flexDirection:'row',
+		alignItems:'center',
+		paddingHorizontal:15
+	},
+	headingTitleBox:{
+		flex:1,
+		flexDirection:'column',
+		justifyContent:'space-around',
+		alignItems:'flex-start',		
+	},
+	headingTitle:{
+		fontFamily:'nunito-regular',
+		fontSize:40,
+		color:colors.tabIconDefault
+	},
+	headingSettingsTitle:{
+		fontFamily:'nunito-regular',
+		fontSize:30,
+		color:colors.tabIconDefault
+	},
+	headingSubtTitle:{
+		fontFamily:'nunito-light',
+		fontSize:17,		
+	},
+	
+	bodyProfile:{
+		flex:2,
+		flexDirection:'column'	
+	},
+	bodyListItem:{
+		fontFamily:'nunito-light',
+		fontSize:20
+	},
+	// Profile
 	statusBarUnderlay: {
 		height: 24,
 		backgroundColor: 'rgba(0,0,0,0.2)',
@@ -221,17 +270,17 @@ const styles = StyleSheet.create({
 	},
 
 	// ACOUNT
-	'avatarView': {
+	avatarView: {
 		alignItems: 'center',
 		justifyContent: 'center',
 		width: 100,
 		height: 100
 	},
-	'avatarImage': {
-		width: 150,
-		height: 150,
+	avatarImage: {
+		width: 100,
+		height: 100,
 		resizeMode: 'cover',
-		borderRadius: 75,
+		borderRadius: 50,
 		margin: 10,
 	},
 });

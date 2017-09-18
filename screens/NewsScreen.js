@@ -23,7 +23,7 @@ import moment from 'moment';
 
 class NewsScreen extends React.Component {
   constructor(props) {
-    console.log("News");
+
     super(props);
     this.state = {
       loading: true,
@@ -49,7 +49,7 @@ class NewsScreen extends React.Component {
   }
 
   static navigationOptions = {
-    title: "Recents Tasting",
+    title: "NEWS",
   };
 
   _renderStar = (rating) => {
