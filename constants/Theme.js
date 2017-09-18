@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 		paddingHorizontal:15
 	},
 	headingSettings:{		
-		flex:0.5,
+		flex:0.3,
 		flexDirection:'row',
 		alignItems:'center',
 		paddingHorizontal:15

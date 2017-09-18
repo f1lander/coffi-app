@@ -71,7 +71,7 @@ export default TabNavigator(
       showLabel: true,
       activeTintColor:Colors.tabIconDefault,
       labelStyle:{
-        fontFamily: 'nunito-black',
+        fontFamily: 'nunito-semibold',
       },
       style: {
         borderTopColor: 'rgba(0,0,0,0.1)',
