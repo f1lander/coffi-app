@@ -80,7 +80,7 @@ const ReviewItem = ({ review }) => {
 @inject("authenticationStore")
 @inject("userStore")
 @observer
-class ProfileScreen extends Component {
+class AccountScreen extends Component {
 
 	constructor(props) {
 		super(props);
@@ -105,7 +105,7 @@ class ProfileScreen extends Component {
 	}
 
 	static navigationOptions = {
-		title: "PROFILE",
+		title: "A" ,
 		header: null
 	};
 
@@ -168,65 +168,48 @@ class ProfileScreen extends Component {
 		navigate("SettingsProfile");
 	}
 
-	handlePressUser(id){
-		const { navigate } = this.props.navigation;
-		navigate("UserAccount", { owner: id });
-	  }
-
 	render() {
 		return (
-			<Container style={theme.containerProfile}>
-				<TouchableOpacity style={theme.headingProfile} onPress={() => this.handlePressUser(this.state.userProfile.userId)}>
-				
-						<View style={theme.headingTitleBox}>
-							<Text style={theme.headingTitle}>{this.state.userProfile.fullname || this.state.userProfile.username}</Text>
-							<Text style={theme.headingSubtTitle}>View and edit profile</Text>
-						</View>
-						<View style={theme.avatarView}>
-							<Image style={theme.avatarImage} source={require("../assets/images/avatar.png")} />
-						</View>
-			
-				</TouchableOpacity>
-				<View style={theme.bodyProfile}>
-					<Content>
-						<List>
-							<ListItem onPress={() => this.navigate()} style={{ height: 75 }} icon>
-								<Left>
-									<Icon name="ios-settings-outline" />
-								</Left>
-								<Body>
-									<Text style={theme.bodyListItem}>Settings</Text>
-								</Body>
-							</ListItem>
-							<ListItem style={{ height: 75 }} icon>
-								<Left>
-									<Icon name="ios-cafe-outline" />
-								</Left>
-								<Body>
-									<Text style={theme.bodyListItem}>Become a Coffiitributor</Text>
-								</Body>
-							</ListItem>
-							<ListItem style={{ height: 75 }} onPress={() => this.showAlert()} icon>
-								<Left>
-									<Icon name="ios-star-outline" />
-								</Left>
-								<Body>
-									<Text style={theme.bodyListItem}>Give us feedback</Text>
-								</Body>
-							</ListItem>
-							<ListItem style={{ height: 75 }} icon>
-								<Left>
-									<Icon name="ios-help-buoy-outline" />
-								</Left>
-								<Body>
-									<Text style={theme.bodyListItem}>Help</Text>
-								</Body>
-							</ListItem>
-						</List>
-					</Content>
-				</View>
-
-			</Container >
+            <Grid>
+            <Row style={{ alignItems: "center" }} size={1}>
+                <Image style={theme.avatarImage} source={{ uri: ApiUtils.getAvatarUrl(this.state.userProfile.id) }} />
+                <View style={{ flexDirection: "column", justifyContent: "flex-start", alignItems: "center" }}>
+                    <Text style={[theme.platoCoinText]}>{this.state.userProfile.fullname || this.state.userProfile.username}</Text>
+                    {/* <Text style={[theme.platoCoinText, { fontSize: 12, fontStyle: "normal" }]}>SPS, Honduras</Text> */}
+                </View>
+            </Row>
+            
+            <Row style={{ paddingHorizontal: 5, height: 70 }}>
+                {
+                    this.showButtonsIfReady()
+                }
+            </Row>
+            
+            <Row style={{ height: 50 }}>
+                <Col style={styles.container}>
+                    <Text style={styles.text}>{this.state.followers.length}</Text>
+                    <Text style={styles.subText}>Followers</Text>
+                </Col>
+                <Col style={styles.container}>
+                    <Text style={styles.text}>{this.state.following.length}</Text>
+                    <Text style={styles.subText}>Following</Text>
+                </Col>
+                <Col style={styles.container}>
+                    <Text style={styles.text}>{this.state.reviews.length}</Text>
+                    <Text style={styles.subText}>Reviews</Text>
+                </Col>
+            </Row>
+            <Row size={2}>
+                <List
+                    dataArray={this.state.reviews}
+                    style={{ flex: 1 }}
+                    renderRow={(review) => <ReviewItem review={review} />}>
+                    <ListItem itemHeader first>
+                        <Text>Recent Reviews</Text>
+                    </ListItem>
+                </List>
+            </Row>
+            </Grid>
 		);
 	}
 }
@@ -251,4 +234,4 @@ const styles = StyleSheet.create({
 
 
 
-export default apiConnector(ProfileScreen);
+export default apiConnector(AccountScreen);

@@ -69,7 +69,7 @@ class NewsScreen extends React.Component {
 
   handlePressUser(id){
     const { navigate } = this.props.navigation;
-    navigate("UserProfile", { owner: id });
+    navigate("UserAccount", { owner: id });
   }
 
   handlePressCoffee(id){

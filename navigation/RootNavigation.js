@@ -6,6 +6,7 @@ import Colors from '../constants/Colors';
 
 import MainTabNavigator from './MainTabNavigator';
 import ProfileScreen from "../screens/ProfileScreen";
+import AccountScreen from "../screens/AccountScreen";
 import CoffeeScreen from '../screens/CoffeeScreen';
 import CoffeeRequestScreen from "../screens/CoffeeRequestScreen";
 import SettingsScreen from "../screens/SettingsScreen";
@@ -25,6 +26,9 @@ const RootStackNavigator = StackNavigator(
 		},
 		UserProfile: {
 			screen: ProfileScreen,
+		},
+		UserAccount: {
+			screen: AccountScreen,
 		},
 		SettingsProfile: {
 			screen: SettingsScreen
